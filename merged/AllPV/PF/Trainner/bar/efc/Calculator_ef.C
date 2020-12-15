@@ -35,7 +35,7 @@ void Calculator_ef(){
   if(tight.is_open()){
     while(!tight.eof()){
       
-      tight>>SieiecutT>>IsoCcutT>>IsoNcutT>>IsoPcutT;
+      tight>>SieiecutT>>IsoCcutT>>IsoNcutT>>IsoPcutT>>HoEcutT;
       break;
     }
   }
@@ -43,7 +43,7 @@ void Calculator_ef(){
   if(medium.is_open()){
     while(!medium.eof()){
       
-      medium>>SieiecutM>>IsoCcutM>>IsoNcutM>>IsoPcutM;
+      medium>>SieiecutM>>IsoCcutM>>IsoNcutM>>IsoPcutM>>HoEcutM;
       break;
 
     }
@@ -54,20 +54,25 @@ void Calculator_ef(){
   if(loose.is_open()){
     while(!loose.eof()){
       
-      loose>>SieiecutL>>IsoCcutL>>IsoNcutL>>IsoPcutL;
+      loose>>SieiecutL>>IsoCcutL>>IsoNcutL>>IsoPcutL>>HoEcutL;
       break;
 
     }
   }
 
-  HoEcutL = 0.05; 
-  HoEcutM = 0.05; 
-  HoEcutT = 0.05; 
+  //HoEcutL = 0.05; 
+  //HoEcutM = 0.05; 
+  //HoEcutT = 0.05; 
 
 
   //Input file:
-  TString fname = "../../../../fabrice_task/PV/PFIso/train/CutTMVABarrel90.root";
-  input = TFile::Open( fname );
+  TString fname = "../../CutTMVABarrel90_test.root";
+  TFile *input = TFile::Open( fname );
+  if( !input || !input->IsOpen() ){
+    cout << "\nERROR! Could not open root file " << fname
+         << endl;
+    exit(0);
+  }
   
   // --- Register the regression tree
   float Sie_ie,iso_P,iso_C,iso_N,to_e,weightXS,weighT;
@@ -75,6 +80,8 @@ void Calculator_ef(){
   int Pix;
 
   //Signal Tree
+  TTree *t_S = (TTree*)input->Get("t_S");
+
   t_S->SetBranchAddress("Sieie",&Sie_ie);
   t_S->SetBranchAddress("isoP",&iso_P);
   t_S->SetBranchAddress("isoC",&iso_C);
@@ -85,6 +92,8 @@ void Calculator_ef(){
   t_S->SetBranchAddress("Ppt",&Ppt);
 
   //Background Tree
+  TTree *t_B = (TTree*)input->Get("t_B");
+
   t_B->SetBranchAddress("Sieie",&Sie_ie);
   t_B->SetBranchAddress("isoP",&iso_P);
   t_B->SetBranchAddress("isoC",&iso_C);
@@ -115,8 +124,8 @@ void Calculator_ef(){
     if(Ppt < 15 || Ppt > 200 ) continue;
     //    if(to_e >  0.05) continue;
     totS = totS+ weighT; 
-    double slopeP = 0.0046; 
-    double slopeN = ((0.0143*Ppt+0.000017*Ppt*Ppt));///Ppt; 
+    double slopeP = 0.002544; 
+    double slopeN = ((0.01556*Ppt-0.000001129*Ppt*Ppt));///Ppt; 
 
 
     //Calculating the Efficiencies for the Loose Set of Cuts 
@@ -124,11 +133,11 @@ void Calculator_ef(){
       LoosSEf = LoosSEf + weighT;
     }
     
-    if((iso_P < IsoPcutM +slopeP*Ppt)&&(iso_N < IsoNcutM +slopeN)&&(iso_C < IsoCcutM)&&(to_e<HoEcutM)&&(Sie_ie < SieiecutM ))){
+    if((iso_P < IsoPcutM +slopeP*Ppt)&&(iso_N < IsoNcutM +slopeN)&&(iso_C < IsoCcutM)&&(to_e<HoEcutM)&&(Sie_ie < SieiecutM )){
        MediumSEf = MediumSEf + weighT;
     }
     
-       if((iso_P < IsoPcutT +slopeP*Ppt)&&(iso_N < IsoNcutT + slopeN)&&(iso_C < IsoCcutT)&&(to_e<HoEcutT)&&(Sie_ie < SieiecutT ) ){
+       if((iso_P < IsoPcutT +slopeP*Ppt)&&(iso_N < IsoNcutT + slopeN)&&(iso_C < IsoCcutT)&&(to_e<HoEcutT)&&(Sie_ie < SieiecutT )){
         TightSEf = TightSEf + weighT;
     }
     
@@ -143,8 +152,8 @@ void Calculator_ef(){
 
     totB = totB+ weighT; 
    
-    double slopeP = 0.0046; 
-    double slopeN = ((0.0143*Ppt+0.000017*Ppt*Ppt));///Ppt; 
+    double slopeP = 0.002544; 
+    double slopeN = ((0.01556*Ppt-0.000001129*Ppt*Ppt));///Ppt; 
     //double slopeP = 0.0053; 
     //double slopeN = ((0.014*Ppt+0.000019*Ppt*Ppt));///Ppt; 
 

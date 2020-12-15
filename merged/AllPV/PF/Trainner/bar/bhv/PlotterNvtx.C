@@ -20,6 +20,9 @@
 #include <string.h>
 #include <fstream>
 
+#include "tdrstyle.C"
+
+
 void PlotterNvtx(){
 
 
@@ -27,20 +30,71 @@ void PlotterNvtx(){
   setTDRStyle();
   gStyle->SetOptStat(0);
 
-  TFile *f11 = TFile::Open("Eff1.root");
+  TString input_name = "Eff1.root";
+  TFile *input = TFile::Open( input_name );
+  if ( !input || !input->IsOpen() ){
+    cout << "\nERROR! Could not open root file " 
+	 << input_name << endl;
+    exit(0);
+  }
+
+  TH1F *EffNVTX0 = (TH1F*)input->Get("EffNVTX0");
+  TH1F *EffNVTXs = (TH1F*)input->Get("EffNVTXs");
+  TH1F *EffNVTXt = (TH1F*)input->Get("EffNVTXt");
+  TH1F *EffNVTXp = (TH1F*)input->Get("EffNVTXp");
+  TH1F *EffNVTXc = (TH1F*)input->Get("EffNVTXc");
+  TH1F *EffNVTXn = (TH1F*)input->Get("EffNVTXn");
+  
+
+  TH1F *EffNVTX0b = (TH1F*)input->Get("EffNVTX0b");
+  TH1F *EffNVTXbs = (TH1F*)input->Get("EffNVTXbs");
+  TH1F *EffNVTXbt = (TH1F*)input->Get("EffNVTXbt");
+  TH1F *EffNVTXbp = (TH1F*)input->Get("EffNVTXbp");
+  TH1F *EffNVTXbc = (TH1F*)input->Get("EffNVTXbc");
+  TH1F *EffNVTXbn = (TH1F*)input->Get("EffNVTXbn");
+
+
+  TH1F *EffNVTXMs = (TH1F*)input->Get("EffNVTXMs");
+  TH1F *EffNVTXMt = (TH1F*)input->Get("EffNVTXMt");
+  TH1F *EffNVTXMp = (TH1F*)input->Get("EffNVTXMp");
+  TH1F *EffNVTXMc = (TH1F*)input->Get("EffNVTXMc");
+  TH1F *EffNVTXMn = (TH1F*)input->Get("EffNVTXMn");
+
+  
+  TH1F *EffNVTXMbs = (TH1F*)input->Get("EffNVTXMbs");
+  TH1F *EffNVTXMbt = (TH1F*)input->Get("EffNVTXMbt");
+  TH1F *EffNVTXMbp = (TH1F*)input->Get("EffNVTXMbp");
+  TH1F *EffNVTXMbc = (TH1F*)input->Get("EffNVTXMbc");
+  TH1F *EffNVTXMbn = (TH1F*)input->Get("EffNVTXMbn");
+  
+
+  TH1F *EffNVTXTs = (TH1F*)input->Get("EffNVTXTs");
+  TH1F *EffNVTXTt = (TH1F*)input->Get("EffNVTXTt");
+  TH1F *EffNVTXTp = (TH1F*)input->Get("EffNVTXTp");
+  TH1F *EffNVTXTc = (TH1F*)input->Get("EffNVTXTc");
+  TH1F *EffNVTXTn = (TH1F*)input->Get("EffNVTXTn");
+
+
+  TH1F *EffNVTXTbs = (TH1F*)input->Get("EffNVTXTbs");
+  TH1F *EffNVTXTbt = (TH1F*)input->Get("EffNVTXTbt");
+  TH1F *EffNVTXTbp = (TH1F*)input->Get("EffNVTXTbp");
+  TH1F *EffNVTXTbc = (TH1F*)input->Get("EffNVTXTbc");
+  TH1F *EffNVTXTbn = (TH1F*)input->Get("EffNVTXTbn");
+
+
 
   //Loose
-  TH1F *SieaftNvtxL  = new TH1F("SieaftNvtxL","Sieie cut only",100,0,100); 
-  TH1F *ToEaftNvtxL  = new TH1F("ToEaftNvtxL","HoE cut only",100,0,100); 
-  TH1F *IsoPaftNvtxL = new TH1F("IsoPaftNvtxL","IsoP cut only",100,0,100); 
-  TH1F *IsoCaftNvtxL = new TH1F("IsoCaftNvtxL","IsoC cut only",100,0,100); 
-  TH1F *IsoNaftNvtxL = new TH1F("IsoNaftNvtxL","IsoN cut only",100,0,100); 
+  TH1F *SieaftNvtxL  = new TH1F("SieaftNvtxL","Sieie cut only",180,0,180); 
+  TH1F *ToEaftNvtxL  = new TH1F("ToEaftNvtxL","HoE cut only",180,0,180); 
+  TH1F *IsoPaftNvtxL = new TH1F("IsoPaftNvtxL","IsoP cut only",180,0,180); 
+  TH1F *IsoCaftNvtxL = new TH1F("IsoCaftNvtxL","IsoC cut only",180,0,180); 
+  TH1F *IsoNaftNvtxL = new TH1F("IsoNaftNvtxL","IsoN cut only",180,0,180); 
 
-  TH1F *SieaftbNvtxL  = new TH1F("SieaftbNvtxL","Sieie cut only",100,0,100); 
-  TH1F *ToEaftbNvtxL  = new TH1F("ToEaftbNvtxL","HoE cut only",100,0,100); 
-  TH1F *IsoPaftbNvtxL = new TH1F("IsoPaftbNvtxL","IsoP cut only",100,0,100); 
-  TH1F *IsoCaftbNvtxL = new TH1F("IsoCaftbNvtxL","IsoC cut only",100,0,100); 
-  TH1F *IsoNaftbNvtxL = new TH1F("IsoNaftbNvtxL","IsoN cut only",100,0,100); 
+  TH1F *SieaftbNvtxL  = new TH1F("SieaftbNvtxL","Sieie cut only",180,0,180); 
+  TH1F *ToEaftbNvtxL  = new TH1F("ToEaftbNvtxL","HoE cut only",180,0,180); 
+  TH1F *IsoPaftbNvtxL = new TH1F("IsoPaftbNvtxL","IsoP cut only",180,0,180); 
+  TH1F *IsoCaftbNvtxL = new TH1F("IsoCaftbNvtxL","IsoC cut only",180,0,180); 
+  TH1F *IsoNaftbNvtxL = new TH1F("IsoNaftbNvtxL","IsoN cut only",180,0,180); 
 
   SieaftNvtxL->Divide(EffNVTXs,EffNVTX0,1.,1.,"B"); 
   ToEaftNvtxL->Divide(EffNVTXt,EffNVTX0,1.,1.,"B");
@@ -104,22 +158,23 @@ void PlotterNvtx(){
   IsoNaftNvtxL->GetXaxis()->SetTitle("# Nvtx");
   
   c11->SaveAs("BranchOutCutsNVTXLWP.png");
-
+  c11->SaveAs("BranchOutCutsNVTXLWP.C");
+  c11->SaveAs("BranchOutCutsNVTXLWP.root");
 
 
 
   //Medium
-  TH1F *SieaftNvtxM  = new TH1F("SieaftNvtxM","Sieie cut only",100,0,100); 
-  TH1F *ToEaftNvtxM  = new TH1F("ToEaftNvtxM","HoE cut only",100,0,100); 
-  TH1F *IsoPaftNvtxM = new TH1F("IsoPaftNvtxM","IsoP cut only",100,0,100); 
-  TH1F *IsoCaftNvtxM = new TH1F("IsoCaftNvtxM","IsoC cut only",100,0,100); 
-  TH1F *IsoNaftNvtxM = new TH1F("IsoNaftNvtxM","IsoN cut only",100,0,100); 
+  TH1F *SieaftNvtxM  = new TH1F("SieaftNvtxM","Sieie cut only",180,0,180); 
+  TH1F *ToEaftNvtxM  = new TH1F("ToEaftNvtxM","HoE cut only",180,0,180); 
+  TH1F *IsoPaftNvtxM = new TH1F("IsoPaftNvtxM","IsoP cut only",180,0,180); 
+  TH1F *IsoCaftNvtxM = new TH1F("IsoCaftNvtxM","IsoC cut only",180,0,180); 
+  TH1F *IsoNaftNvtxM = new TH1F("IsoNaftNvtxM","IsoN cut only",180,0,180); 
 
-  TH1F *SieaftbNvtxM  = new TH1F("SieaftbNvtxM","Sieie cut only",100,0,100); 
-  TH1F *ToEaftbNvtxM  = new TH1F("ToEaftbNvtxM","HoE cut only",100,0,100); 
-  TH1F *IsoPaftbNvtxM = new TH1F("IsoPaftbNvtxM","IsoP cut only",100,0,100); 
-  TH1F *IsoCaftbNvtxM = new TH1F("IsoCaftbNvtxM","IsoC cut only",100,0,100); 
-  TH1F *IsoNaftbNvtxM = new TH1F("IsoNaftbNvtxM","IsoN cut only",100,0,100); 
+  TH1F *SieaftbNvtxM  = new TH1F("SieaftbNvtxM","Sieie cut only",180,0,180); 
+  TH1F *ToEaftbNvtxM  = new TH1F("ToEaftbNvtxM","HoE cut only",180,0,180); 
+  TH1F *IsoPaftbNvtxM = new TH1F("IsoPaftbNvtxM","IsoP cut only",180,0,180); 
+  TH1F *IsoCaftbNvtxM = new TH1F("IsoCaftbNvtxM","IsoC cut only",180,0,180); 
+  TH1F *IsoNaftbNvtxM = new TH1F("IsoNaftbNvtxM","IsoN cut only",180,0,180); 
 
   SieaftNvtxM->Divide(EffNVTXMs,EffNVTX0,1.,1.,"B"); 
   ToEaftNvtxM->Divide(EffNVTXMt,EffNVTX0,1.,1.,"B");
@@ -183,21 +238,22 @@ void PlotterNvtx(){
   IsoNaftNvtxM->GetXaxis()->SetTitle("# Nvtx");
 
   c22->SaveAs("BranchOutCutsNVTXMWP.png");
-
+  c22->SaveAs("BranchOutCutsNVTXMWP.C");
+  c22->SaveAs("BranchOutCutsNVTXMWP.root");
 
 
   //Tight
-  TH1F *SieaftNvtxT  = new TH1F("SieaftNvtxT","Sieie cut only",100,0,100); 
-  TH1F *ToEaftNvtxT  = new TH1F("ToEaftNvtxT","HoE cut only",100,0,100); 
-  TH1F *IsoPaftNvtxT = new TH1F("IsoPaftNvtxT","IsoP cut only",100,0,100); 
-  TH1F *IsoCaftNvtxT = new TH1F("IsoCaftNvtxT","IsoC cut only",100,0,100); 
-  TH1F *IsoNaftNvtxT = new TH1F("IsoNaftNvtxT","IsoN cut only",100,0,100); 
+  TH1F *SieaftNvtxT  = new TH1F("SieaftNvtxT","Sieie cut only",180,0,180); 
+  TH1F *ToEaftNvtxT  = new TH1F("ToEaftNvtxT","HoE cut only",180,0,180); 
+  TH1F *IsoPaftNvtxT = new TH1F("IsoPaftNvtxT","IsoP cut only",180,0,180); 
+  TH1F *IsoCaftNvtxT = new TH1F("IsoCaftNvtxT","IsoC cut only",180,0,180); 
+  TH1F *IsoNaftNvtxT = new TH1F("IsoNaftNvtxT","IsoN cut only",180,0,180); 
 
-  TH1F *SieaftbNvtxT  = new TH1F("SieaftbNvtxT","Sieie cut only",100,0,100); 
-  TH1F *ToEaftbNvtxT  = new TH1F("ToEaftbNvtxT","HoE cut only",100,0,100); 
-  TH1F *IsoPaftbNvtxT = new TH1F("IsoPaftbNvtxT","IsoP cut only",100,0,100); 
-  TH1F *IsoCaftbNvtxT = new TH1F("IsoCaftbNvtxT","IsoC cut only",100,0,100); 
-  TH1F *IsoNaftbNvtxT = new TH1F("IsoNaftbNvtxT","IsoN cut only",100,0,100); 
+  TH1F *SieaftbNvtxT  = new TH1F("SieaftbNvtxT","Sieie cut only",180,0,180); 
+  TH1F *ToEaftbNvtxT  = new TH1F("ToEaftbNvtxT","HoE cut only",180,0,180); 
+  TH1F *IsoPaftbNvtxT = new TH1F("IsoPaftbNvtxT","IsoP cut only",180,0,180); 
+  TH1F *IsoCaftbNvtxT = new TH1F("IsoCaftbNvtxT","IsoC cut only",180,0,180); 
+  TH1F *IsoNaftbNvtxT = new TH1F("IsoNaftbNvtxT","IsoN cut only",180,0,180); 
 
   SieaftNvtxT->Divide(EffNVTXTs,EffNVTX0,1.,1.,"B"); 
   ToEaftNvtxT->Divide(EffNVTXTt,EffNVTX0,1.,1.,"B");
@@ -261,4 +317,7 @@ void PlotterNvtx(){
   IsoNaftNvtxT->GetXaxis()->SetTitle("# Nvtx");
 
   c33->SaveAs("BranchOutCutsNVTXTWP.png");
+  c33->SaveAs("BranchOutCutsNVTXTWP.C");
+  c33->SaveAs("BranchOutCutsNVTXTWP.root");
+
 }

@@ -28,21 +28,42 @@ void PlotBuilder(){
   ifstream medium;
   ifstream loose;
 
+  
+  TString tight_name = "TightR.txt";
+  TString medium_name = "MediumR.txt";
+  TString loose_name = "LooseR.txt";
 
-  tight.open("TightR.txt");
-  medium.open("MediumR.txt");
-  loose.open("LooseR.txt");
+  tight.open(tight_name);
+  if( !tight || !tight.is_open() ){
+    cout << "\nERROR! Could not open txt file "
+         << tight_name << endl;
+    exit(0);
+  }
+
+  medium.open(medium_name);
+  if( !medium || !medium.is_open() ){
+    cout << "\nERROR! Could not open txt file "
+         << medium_name << endl;
+    exit(0);
+  }
+
+  loose.open(loose_name);
+  if( !loose || !loose.is_open() ){
+    cout << "\nERROR! Could not open txt file "
+         << loose_name << endl;
+    exit(0);
+  }
 
 
   double isoCL,isoCM,isoCT;
   double isoPL,isoPM,isoPT;
   double isoNL,isoNM,isoNT;
   double sieL,sieM,sieT; 
-  double hoeU = 0.05;
+  double toeL,toeM,toeT;
 
   if(tight.is_open()){
     while(!tight.eof()){
-      tight>>sieT>>isoCT>>isoNT>>isoPT;
+      tight>>sieT>>isoCT>>isoNT>>isoPT>>toeT;
       break;
     }
   }
@@ -50,7 +71,7 @@ void PlotBuilder(){
   
   if(medium.is_open()){
     while(!medium.eof()){
-      medium>>sieM>>isoCM>>isoNM>>isoPM;
+      medium>>sieM>>isoCM>>isoNM>>isoPM>>toeM;
       break;
     }
   }
@@ -58,7 +79,7 @@ void PlotBuilder(){
 
   if(loose.is_open()){
     while(!loose.eof()){
-      loose>>sieL>>isoCL>>isoNL>>isoPL;
+      loose>>sieL>>isoCL>>isoNL>>isoPL>>toeL;
       break;
     }
   }
@@ -68,42 +89,42 @@ void PlotBuilder(){
 
   TH1F *EffNVTX0 = new TH1F("EffNVTX0","Signal Eff vs NVTX 0",100,0,100);
   TH1F *EffPT0   = new TH1F("EffPT0","Signal Eff vs PT 0",100,0,200);
-  TH1F *EffETA0  = new TH1F("EffETA0","Signal Eff vs Eta 0",100,-5,5);
+  TH1F *EffETA0  = new TH1F("EffETA0","Signal Eff vs Eta 0",100,-3,3);
   TH1F *EffPHI0  = new TH1F("EffPHI0","Signal Eff vs PHI 0",100,-4,4);
 
   TH1F *EffNVTXL = new TH1F("EffNVTXL","Signal Eff vs NVTX L",100,0,100);
   TH1F *EffPTL   = new TH1F("EffPTL","Signal Eff vs PT L",100,0,200);
-  TH1F *EffETAL  = new TH1F("EffETAL","Signal Eff vs Eta L",100,-5,5);
+  TH1F *EffETAL  = new TH1F("EffETAL","Signal Eff vs Eta L",100,-3,3);
   TH1F *EffPHIL  = new TH1F("EffPHIL","Signal Eff vs PHI L",100,-4,4);
   
   TH1F *EffNVTXM = new TH1F("EffNVTXM","Signal Eff vs NVTX M",100,0,100);
   TH1F *EffPTM   = new TH1F("EffPTM","Signal Eff vs PT M",100,0,200);
-  TH1F *EffETAM  = new TH1F("EffETAM","Signal Eff vs Eta M",100,-5,5);
+  TH1F *EffETAM  = new TH1F("EffETAM","Signal Eff vs Eta M",100,-3,3);
   TH1F *EffPHIM  = new TH1F("EffPHIM","Signal Eff vs PHI M",100,-4,4);
 
   TH1F *EffNVTXT = new TH1F("EffNVTXT","Signal Eff vs NVTX T",100,0,100);
   TH1F *EffPTT   = new TH1F("EffPTT","Signal Eff vs PT T",100,0,200);
-  TH1F *EffETAT  = new TH1F("EffETAT","Signal Eff vs Eta T",100,-5,5);
+  TH1F *EffETAT  = new TH1F("EffETAT","Signal Eff vs Eta T",100,-3,3);
   TH1F *EffPHIT  = new TH1F("EffPHIT","Signal Eff vs PHI T",100,-4,4);
 
   TH1F *EffNVTX0b = new TH1F("EffNVTX0b","Signal Eff vs NVTX 0",100,0,100);
   TH1F *EffPT0b   = new TH1F("EffPT0b","Signal Eff vs PT 0",100,0,200);
-  TH1F *EffETA0b  = new TH1F("EffETA0b","Signal Eff vs Eta 0",100,-5,5);
+  TH1F *EffETA0b  = new TH1F("EffETA0b","Signal Eff vs Eta 0",100,-3,3);
   TH1F *EffPHI0b  = new TH1F("EffPHI0b","Signal Eff vs PHI 0",100,-4,4);
 
   TH1F *EffNVTXLb = new TH1F("EffNVTXLb","Signal Eff vs NVTX L",100,0,100);
   TH1F *EffPTLb   = new TH1F("EffPTLb","Signal Eff vs PT L",100,0,200);
-  TH1F *EffETALb  = new TH1F("EffETALb","Signal Eff vs Eta L",100,-5,5);
+  TH1F *EffETALb  = new TH1F("EffETALb","Signal Eff vs Eta L",100,-3,3);
   TH1F *EffPHILb  = new TH1F("EffPHILb","Signal Eff vs PHI L",100,-4,4);
   
   TH1F *EffNVTXMb = new TH1F("EffNVTXMb","Signal Eff vs NVTX M",100,0,100);
   TH1F *EffPTMb   = new TH1F("EffPTMb","Signal Eff vs PT M",100,0,200);
-  TH1F *EffETAMb  = new TH1F("EffETAMb","Signal Eff vs Eta M",100,-5,5);
+  TH1F *EffETAMb  = new TH1F("EffETAMb","Signal Eff vs Eta M",100,-3,3);
   TH1F *EffPHIMb  = new TH1F("EffPHIMb","Signal Eff vs PHI M",100,-4,4);
 
   TH1F *EffNVTXTb = new TH1F("EffNVTXTb","Signal Eff vs NVTX T",100,0,100);
   TH1F *EffPTTb  = new TH1F("EffPTTb","Signal Eff vs PT T",100,0,200);
-  TH1F *EffETATb  = new TH1F("EffETATb","Signal Eff vs Eta T",100,-5,5);
+  TH1F *EffETATb  = new TH1F("EffETATb","Signal Eff vs Eta T",100,-3,3);
   TH1F *EffPHITb  = new TH1F("EffPHITb","Signal Eff vs PHI T",100,-4,4);
 
   // Branch out Cuts
@@ -148,13 +169,23 @@ void PlotBuilder(){
   
   //Setting the Tree Branches
 
-  //TFile *finput = new TFile( "../../../CutTMVABarrel90_HPT.root");
-  TFile *finput = new TFile( "../../../isopt/Sample_15to6000/CutTMVABarrel_HPT15to6000.root");
+  TString finput_name = "../../CutTMVABarrel90_test.root";
+  TFile *finput = new TFile(finput_name);
+  if (!finput || !finput->IsOpen() ) {
+    cout << "\nERROR! Could not open root file " << finput_name
+         << endl;
+    exit(0);
+  }
+
+
   float Ppt,Peta,Pphi,isoP,isoC,isoN,sieie,toe,weight;
   int   nvtx; 
   
   finput->cd();
+
   //Signal Tree                                                                 
+  TTree *t_S = (TTree*)finput->Get("t_S");
+
   t_S->SetBranchAddress("Sieie",&sieie);
   t_S->SetBranchAddress("isoP",&isoP);
   t_S->SetBranchAddress("isoC",&isoC);
@@ -165,7 +196,10 @@ void PlotBuilder(){
   t_S->SetBranchAddress("Peta",&Peta);
   t_S->SetBranchAddress("Ppt",&Ppt);
 
-  //Background Tree                                                                 
+
+  //Background Tree
+  TTree *t_B = (TTree*)finput->Get("t_B");
+                                                   
   t_B->SetBranchAddress("Sieie",&sieie);
   t_B->SetBranchAddress("isoP",&isoP);
   t_B->SetBranchAddress("isoC",&isoC);
@@ -261,10 +295,10 @@ void PlotBuilder(){
   
     //Loose Cut: 
     if((sieie  < sieL)&&
-       (toe    < 0.05)&&
-       (isoP-0.0053*Ppt < isoPL)&&
+       (toe    < toeL)&&
+       (isoP-0.002544*Ppt < isoPL)&&
        (isoC   < isoCL)&&
-       (isoN-(0.0014*Ppt+0.000019*Ppt*Ppt) < isoNL)){
+       (isoN-(0.01556*Ppt+0.000001129*Ppt*Ppt) < isoNL)){
       
       EffNVTXL->Fill(nvtx,weight);
       EffPTL->Fill(Ppt,weight);
@@ -273,20 +307,20 @@ void PlotBuilder(){
     
     //Medium Cut:
     if((sieie  < sieM)&&
-       (toe    < 0.05)&&
-       (isoP -0.0053*Ppt < isoPM)&&
+       (toe    < toeM)&&
+       (isoP -0.002544*Ppt < isoPM)&&
        (isoC   < isoCM)&&
-       (isoN- (0.014*Ppt+0.000019*Ppt*Ppt) < isoNM)){
+       (isoN- (0.01556*Ppt-0.000001129*Ppt*Ppt) < isoNM)){
       EffNVTXM->Fill(nvtx,weight);
       EffPTM->Fill(Ppt,weight);
       EffETAM->Fill(Peta,weight);
     }
     //Tight Cut:
     if((sieie  < sieT)&&
-       (toe    < 0.05)&&
-       (isoP -0.0053*Ppt < isoPT)&&
+       (toe    < toeT)&&
+       (isoP -0.002544*Ppt < isoPT)&&
        (isoC   < isoCT)&&
-       (isoN - (0.0014*Ppt+0.000019*Ppt*Ppt) < isoNT)){
+       (isoN - (0.001556*Ppt-0.000001129*Ppt*Ppt) < isoNT)){
       EffNVTXT->Fill(nvtx,weight);
       EffPTT->Fill(Ppt,weight);
       EffETAT->Fill(Peta,weight);
@@ -296,11 +330,11 @@ void PlotBuilder(){
        EffNVTXs->Fill(nvtx,weight);
        EffPTs->Fill(Ppt,weight);
     }
-    if(toe    < 0.05){
+    if(toe    < toeL){
       EffNVTXt->Fill(nvtx,weight);
       EffPTt->Fill(Ppt,weight);
     }    
-    if(isoP -0.0053*Ppt < isoPL){    
+    if(isoP -0.002544*Ppt < isoPL){    
       EffNVTXp->Fill(nvtx,weight);
       EffPTp->Fill(Ppt,weight);
     }    
@@ -308,7 +342,7 @@ void PlotBuilder(){
       EffNVTXc->Fill(nvtx,weight);
       EffPTc->Fill(Ppt,weight);
     }
-    if(isoN-(0.0014*Ppt + 0.000019*Ppt*Ppt) < isoNL){
+    if(isoN-(0.001556*Ppt - 0.000001129*Ppt*Ppt) < isoNL){
       EffNVTXn->Fill(nvtx,weight);
       EffPTn->Fill(Ppt,weight);
     }
@@ -329,10 +363,10 @@ void PlotBuilder(){
   
     //Loose Cut: 
     if((sieie  < sieL)&&
-       (toe    < 0.05)&&
-       (isoP -0.0053*Ppt < isoPL)&&
+       (toe    < toeL)&&
+       (isoP -0.002544*Ppt < isoPL)&&
        (isoC   < isoCL)&&
-       (isoN-((0.0014*Ppt+0.000019*Ppt*Ppt)) < isoNL)){
+       (isoN-((0.001556*Ppt-0.000001129*Ppt*Ppt)) < isoNL)){
       
       EffNVTXLb->Fill(nvtx,weight);
       EffPTLb->Fill(Ppt,weight);
@@ -341,20 +375,20 @@ void PlotBuilder(){
     
     //Medium Cut:
     if((sieie  < sieM)&&
-       (toe    < 0.05)&&
-       (isoP -0.0053*Ppt < isoPM)&&
+       (toe    < toeM)&&
+       (isoP -0.002544*Ppt < isoPM)&&
        (isoC   < isoCM)&&
-       (isoN-(0.0014*Ppt+0.000019*Ppt*Ppt) < isoNM)){
+       (isoN-(0.001556*Ppt-0.000001129*Ppt*Ppt) < isoNM)){
       EffNVTXMb->Fill(nvtx,weight);
       EffPTMb->Fill(Ppt,weight);
       EffETAMb->Fill(Peta,weight);
     }
     //Tight Cut:
     if((sieie  < sieT)&&
-       (toe    < 0.05)&&
-       (isoP -0.0053*Ppt < isoPT)&&
+       (toe    < toeT)&&
+       (isoP -0.002544*Ppt < isoPT)&&
        (isoC   < isoCT)&&
-       (isoN-(0.0014*Ppt+0.000019*Ppt*Ppt) < isoNT)){
+       (isoN-(0.001556*Ppt-0.000001129*Ppt*Ppt) < isoNT)){
       EffNVTXTb->Fill(nvtx,weight);
       EffPTTb->Fill(Ppt,weight);
       EffETATb->Fill(Peta,weight);
@@ -364,11 +398,11 @@ void PlotBuilder(){
        EffNVTXbs->Fill(nvtx,weight);
        EffPTbs->Fill(Ppt,weight);
     }
-    if(toe    < 0.05){
+    if(toe    < toeL){
       EffNVTXbt->Fill(nvtx,weight);
       EffPTbt->Fill(Ppt,weight);
     }    
-    if(isoP -0.0053*Ppt < isoPL){    
+    if(isoP -0.002544*Ppt < isoPL){    
       EffNVTXbp->Fill(nvtx,weight);
       EffPTbp->Fill(Ppt,weight);
     }    
@@ -376,7 +410,7 @@ void PlotBuilder(){
       EffNVTXbc->Fill(nvtx,weight);
       EffPTbc->Fill(Ppt,weight);
     }
-    if(isoN-(0.0014*Ppt+0.000019*Ppt*Ppt) < isoNL){
+    if(isoN-(0.01556*Ppt+0.000001129*Ppt*Ppt) < isoNL){
       EffNVTXbn->Fill(nvtx,weight);
       EffPTbn->Fill(Ppt,weight);
     }

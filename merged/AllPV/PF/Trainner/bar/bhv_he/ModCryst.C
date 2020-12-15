@@ -108,6 +108,7 @@ void ModCryst(){
   Mphi_D->Divide(Mphi_s,Mphi_sALL,1.,1.,"B");
   Mphi_DH->Divide(Mphi_sH,Mphi_sALLH,1.,1.,"B");
 
+
   //Tracing Percentages
 
   double M1[10] = {0};

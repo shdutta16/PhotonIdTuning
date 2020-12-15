@@ -20,60 +20,108 @@
 #include <string.h>
 #include <fstream>
 
+
+#include "tdrstyle.C"
+
+
 void EfCOMP(){
-
-
 
 
   gROOT->ProcessLine(" .L tdrstyle.C");
   setTDRStyle();
   gStyle->SetOptStat(0);
 
-  TH1F *Letas = new TH1F("Letas","Loose Cut Efficiency Eta",100,-5,5);
-  TH1F *Metas = new TH1F("Metas","Medium Cut Efficiency Eta",100,-5,5);
-  TH1F *Tetas = new TH1F("Tetas","Tight Cut Efficiency Eta",100,-5,5); 
+  TH1F *Letas = new TH1F("Letas","Loose Cut Efficiency Eta",100,-3,3);
+  TH1F *Metas = new TH1F("Metas","Medium Cut Efficiency Eta",100,-3,3);
+  TH1F *Tetas = new TH1F("Tetas","Tight Cut Efficiency Eta",100,-3,3); 
 
-  TH1F *Lpts = new TH1F("Lpts","Loose Cut Efficiency pt",100,0,200);
-  TH1F *Mpts = new TH1F("Mpts","Medium Cut Efficiency pt",100,0,200);
-  TH1F *Tpts = new TH1F("Tpts","Tight Cut Efficiency pt",100,0,200); 
+  TH1F *Lpts = new TH1F("Lpts","Loose Cut Efficiency pt",100,0,250);
+  TH1F *Mpts = new TH1F("Mpts","Medium Cut Efficiency pt",100,0,250);
+  TH1F *Tpts = new TH1F("Tpts","Tight Cut Efficiency pt",100,0,250); 
 
-  TH1F *Lnvtxs = new TH1F("Lnvtxs","Loose Cut Efficiency vertices",100,0,100);
-  TH1F *Mnvtxs = new TH1F("Mnvtxs","Medium Cut Efficiency vertices",100,0,100);
-  TH1F *Tnvtxs = new TH1F("Tnvtxs","Tight Cut Efficiency vertices",100,0,100); 
-
-
-  TH1F *Letab = new TH1F("Letab","Loose Cut b Efficiency Eta",100,-5,5);
-  TH1F *Metab = new TH1F("Metab","Medium Cut b Efficiency Eta",100,-5,5);
-  TH1F *Tetab = new TH1F("Tetab","Tight Cut b Efficiency Eta",100,-5,5); 
+  TH1F *Lnvtxs = new TH1F("Lnvtxs","Loose Cut Efficiency vertices",180,0,180);
+  TH1F *Mnvtxs = new TH1F("Mnvtxs","Medium Cut Efficiency vertices",180,0,180);
+  TH1F *Tnvtxs = new TH1F("Tnvtxs","Tight Cut Efficiency vertices",180,0,180); 
 
 
-  TH1F *Lptb = new TH1F("Lptb","Loose Cut b Efficiency pt",100,0,200);
-  TH1F *Mptb = new TH1F("Mptb","Medium Cut b Efficiency pt",100,0,200);
-  TH1F *Tptb = new TH1F("Tptb","Tight Cut b Efficiency pt",100,0,200); 
 
+  TH1F *Letab = new TH1F("Letab","Loose Cut b Efficiency Eta",100,-3,3);
+  TH1F *Metab = new TH1F("Metab","Medium Cut b Efficiency Eta",100,-3,3);
+  TH1F *Tetab = new TH1F("Tetab","Tight Cut b Efficiency Eta",100,-3,3); 
 
+  TH1F *Lptb = new TH1F("Lptb","Loose Cut b Efficiency pt",100,0,250);
+  TH1F *Mptb = new TH1F("Mptb","Medium Cut b Efficiency pt",100,0,250);
+  TH1F *Tptb = new TH1F("Tptb","Tight Cut b Efficiency pt",100,0,250); 
   
-  TH1F *Lnvtxb = new TH1F("Lnvtxb","Loose Cut b  Efficiency vertices",100,0,100);
-  TH1F *Mnvtxb = new TH1F("Mnvtxb","Medium Cut b Efficiency vertices",100,0,100);
-  TH1F *Tnvtxb = new TH1F("Tnvtxb","Tight Cut b Efficiency vertices",100,0,100); 
-
-
-  TH1F *Sieaft  = new TH1F("Sieaft","Sieie cut only",100,0,200); 
-  TH1F *ToEaft  = new TH1F("ToEaft","HoE cut only",100,0,200); 
-  TH1F *IsoPaft = new TH1F("IsoPaft","IsoP cut only",100,0,200); 
-  TH1F *IsoCaft = new TH1F("IsoCaft","IsoC cut only",100,0,200); 
-  TH1F *IsoNaft = new TH1F("IsoNaft","IsoN cut only",100,0,200); 
+  TH1F *Lnvtxb = new TH1F("Lnvtxb","Loose Cut b  Efficiency vertices",180,0,180);
+  TH1F *Mnvtxb = new TH1F("Mnvtxb","Medium Cut b Efficiency vertices",180,0,180);
+  TH1F *Tnvtxb = new TH1F("Tnvtxb","Tight Cut b Efficiency vertices",180,0,180); 
 
 
 
+  TH1F *Sieaft  = new TH1F("Sieaft","Sieie cut only",100,0,250); 
+  TH1F *ToEaft  = new TH1F("ToEaft","HoE cut only",100,0,250); 
+  TH1F *IsoPaft = new TH1F("IsoPaft","IsoP cut only",100,0,250); 
+  TH1F *IsoCaft = new TH1F("IsoCaft","IsoC cut only",100,0,250); 
+  TH1F *IsoNaft = new TH1F("IsoNaft","IsoN cut only",100,0,250); 
+
+
+
+  TString fname = "Eff1.root";
+  TFile *input = TFile::Open( fname );
+  if (!input || !input->IsOpen()) {
+    cout << "\nERROR! Could not open root file " << fname
+         << endl;
+    exit(0);
+  }
+
+  TH1F *EffETA0 = (TH1F*)input->Get("EffETA0");
+  TH1F *EffETAL = (TH1F*)input->Get("EffETAL");
+  TH1F *EffETAM = (TH1F*)input->Get("EffETAM");
+  TH1F *EffETAT = (TH1F*)input->Get("EffETAT");
+
+  TH1F *EffETA0b = (TH1F*)input->Get("EffETA0b");
+  TH1F *EffETALb = (TH1F*)input->Get("EffETALb");
+  TH1F *EffETAMb = (TH1F*)input->Get("EffETAMb");
+  TH1F *EffETATb = (TH1F*)input->Get("EffETATb");
+  
+
+
+  TH1F *EffPT0 = (TH1F*)input->Get("EffPT0");
+  TH1F *EffPTL = (TH1F*)input->Get("EffPTL");
+  TH1F *EffPTM = (TH1F*)input->Get("EffPTM");
+  TH1F *EffPTT = (TH1F*)input->Get("EffPTT");
+
+  TH1F *EffPT0b = (TH1F*)input->Get("EffPT0b");
+  TH1F *EffPTLb = (TH1F*)input->Get("EffPTLb");
+  TH1F *EffPTMb = (TH1F*)input->Get("EffPTMb");
+  TH1F *EffPTTb = (TH1F*)input->Get("EffPTTb");
+
+
+
+  TH1F *EffNVTX0 = (TH1F*)input->Get("EffNVTX0");
+  TH1F *EffNVTXL = (TH1F*)input->Get("EffNVTXL");
+  TH1F *EffNVTXM = (TH1F*)input->Get("EffNVTXM");
+  TH1F *EffNVTXT = (TH1F*)input->Get("EffNVTXT");
+
+  TH1F *EffNVTX0b = (TH1F*)input->Get("EffNVTX0b");
+  TH1F *EffNVTXLb = (TH1F*)input->Get("EffNVTXLb");
+  TH1F *EffNVTXMb = (TH1F*)input->Get("EffNVTXMb");
+  TH1F *EffNVTXTb = (TH1F*)input->Get("EffNVTXTb");
+
+
+
+  TH1F *EffPTs = (TH1F*)input->Get("EffPTs");
+  TH1F *EffPTt = (TH1F*)input->Get("EffPTt");
+  TH1F *EffPTp = (TH1F*)input->Get("EffPTp");
+  TH1F *EffPTc = (TH1F*)input->Get("EffPTc");
+  TH1F *EffPTn = (TH1F*)input->Get("EffPTn");
 
 
 
   Letas->Divide(EffETAL,EffETA0,1.,1.,"B");
   Metas->Divide(EffETAM,EffETA0,1.,1.,"B");
   Tetas->Divide(EffETAT,EffETA0,1.,1.,"B");
-
-  cout<<"Here"<<endl;
   
   Letab->Divide(EffETALb,EffETA0b,1.,1.,"B");
   Metab->Divide(EffETAMb,EffETA0b,1.,1.,"B");
@@ -84,23 +132,21 @@ void EfCOMP(){
   Lpts->Divide(EffPTL,EffPT0,1.,1.,"B");
   Mpts->Divide(EffPTM,EffPT0,1.,1.,"B");
   Tpts->Divide(EffPTT,EffPT0,1.,1.,"B");
-
   
   Lptb->Divide(EffPTLb,EffPT0b,1.,1.,"B");
   Mptb->Divide(EffPTMb,EffPT0b,1.,1.,"B");
   Tptb->Divide(EffPTTb,EffPT0b,1.,1.,"B");
-
 
   
 
   Lnvtxs->Divide(EffNVTXL,EffNVTX0,1.,1.,"B");
   Mnvtxs->Divide(EffNVTXM,EffNVTX0,1.,1.,"B");
   Tnvtxs->Divide(EffNVTXT,EffNVTX0,1.,1.,"B");
-
-  
+ 
   Lnvtxb->Divide(EffNVTXLb,EffNVTX0b,1.,1.,"B");
   Mnvtxb->Divide(EffNVTXMb,EffNVTX0b,1.,1.,"B");
   Tnvtxb->Divide(EffNVTXTb,EffNVTX0b,1.,1.,"B");
+
 
 
   // the branch  out cuts 
@@ -112,10 +158,12 @@ void EfCOMP(){
   IsoCaft->Divide(EffPTc,EffPT0,1.,1.,"B");
   IsoNaft->Divide(EffPTn,EffPT0,1.,1.,"B");
 
+
   TCanvas *cpt = new TCanvas("cpt","Pt Eff",500,500);
   cpt->cd();
   Lpts->Draw();
   Lpts->GetXaxis()->SetTitle("Pt GeVc^{-1}");
+  Lpts->GetXaxis()->SetRangeUser(0,300.0);
   Lpts->GetYaxis()->SetRangeUser(0,1.0);
   Lpts->SetLineColor(kGray + 3);
   Lpts->SetMarkerColor(kGray +3);
@@ -129,8 +177,8 @@ void EfCOMP(){
   Mpts->SetMarkerSize(0.5);
  
   Tpts->Draw("esame");
-  Tpts->SetMarkerColor(kYellow);
-  Tpts->SetLineColor(kYellow );
+  Tpts->SetMarkerColor(kGreen);
+  Tpts->SetLineColor(kGreen );
   Tpts->SetMarkerStyle(20);
   Tpts->SetMarkerSize(0.5);
      
@@ -140,33 +188,28 @@ void EfCOMP(){
   Lptb->SetMarkerSize(0.5);
   Lptb->Draw("esame");
 
-  
   Mptb->SetLineColor(kAzure + 5);
   Mptb->SetMarkerColor(kAzure +5);
   Mptb->SetMarkerStyle(20);
   Mptb->SetMarkerSize(0.5);
   Mptb->Draw("esame");
-
-
-  
+ 
   Tptb->SetLineColor(kAzure + 10);
   Tptb->SetMarkerColor(kAzure +10);
   Tptb->SetMarkerStyle(20);
   Tptb->SetMarkerSize(0.5);
   Tptb->Draw("esame");
 
-
-
-
-
- 
-
   cpt->SaveAs("EfPT.png");
+  cpt->SaveAs("EfPT.C");
+  cpt->SaveAs("EfPT.root");
+
+
 
   TCanvas *ceta = new TCanvas("ceta","Eta Eff",500,500);
   ceta->cd();
   Letas->GetXaxis()->SetTitle("#eta");
-  //Letas->GetXaxis()->SetRangeUser(-5,5);
+  Letas->GetXaxis()->SetRangeUser(-3.0,3.0);
   Letas->GetYaxis()->SetRangeUser(0,1.0);
   Letas->SetLineColor(kGray + 3);
   Letas->SetMarkerColor(kGray +3);
@@ -180,24 +223,17 @@ void EfCOMP(){
   Letab->SetMarkerSize(0.5);
   Letab->Draw("esame");
 
-  
   Metab->SetLineColor(kAzure + 5);
   Metab->SetMarkerColor(kAzure +5);
   Metab->SetMarkerStyle(20);
   Metab->SetMarkerSize(0.5);
   Metab->Draw("esame");
 
-
-  
   Tetab->SetLineColor(kAzure + 10);
   Tetab->SetMarkerColor(kAzure +10);
   Tetab->SetMarkerStyle(20);
   Tetab->SetMarkerSize(0.5);
   Tetab->Draw("esame");
-
-
-
-
 
   Metas->Draw("esame");
   Metas->SetMarkerColor(kOrange -3);
@@ -205,13 +241,14 @@ void EfCOMP(){
   Metas->SetMarkerStyle(20);
   Metas->SetMarkerSize(0.5);
   Tetas->Draw("esame");
-  Tetas->SetMarkerColor(kYellow );
-  Tetas->SetLineColor(kYellow );
+  Tetas->SetMarkerColor(kGreen );
+  Tetas->SetLineColor(kGreen );
   Tetas->SetMarkerStyle(20);
   Tetas->SetMarkerSize(0.5);
- 
 
   ceta->SaveAs("EfETA.png");
+  ceta->SaveAs("EfETA.C");
+  ceta->SaveAs("EfETA.root");
 
 
   
@@ -219,7 +256,6 @@ void EfCOMP(){
   cnvtx->cd();
   Lnvtxs->GetXaxis()->SetTitle("Nvtx");
   Lnvtxs->GetYaxis()->SetRangeUser(0,1.0);
-  Lnvtxs->GetXaxis()->SetRangeUser(0,50);
   Lnvtxs->SetLineColor(kGray +3 );
   Lnvtxs->SetMarkerColor(kGray +3 );
   Lnvtxs->SetMarkerStyle(20);
@@ -231,10 +267,11 @@ void EfCOMP(){
   Mnvtxs->SetLineColor(kOrange -3);
   Mnvtxs->SetMarkerStyle(20);
   Mnvtxs->SetMarkerSize(0.5);
+
   Tnvtxs->Draw("esame");
-  Tnvtxs->SetMarkerColor(kYellow);
+  Tnvtxs->SetMarkerColor(kGreen);
   Tnvtxs->SetMarkerSize(0.5);
-  Tnvtxs->SetLineColor(kYellow);
+  Tnvtxs->SetLineColor(kGreen);
   Tnvtxs->SetMarkerStyle(20);
 
 
@@ -244,15 +281,12 @@ void EfCOMP(){
   Lnvtxb->SetMarkerStyle(20);
   Lnvtxb->SetMarkerSize(0.5);
   Lnvtxb->Draw("esame");
-
   
   Mnvtxb->SetLineColor(kAzure + 5);
   Mnvtxb->SetMarkerColor(kAzure +5);
   Mnvtxb->SetMarkerStyle(20);
   Mnvtxb->SetMarkerSize(0.5);
   Mnvtxb->Draw("esame");
-
-
   
   Tnvtxb->SetLineColor(kAzure + 10);
   Tnvtxb->SetMarkerColor(kAzure +10);
@@ -260,9 +294,11 @@ void EfCOMP(){
   Tnvtxb->SetMarkerSize(0.5);
   Tnvtxb->Draw("esame");
 
-
   cnvtx->Update();
   cnvtx->SaveAs("EfNVTX.png");
+  cnvtx->SaveAs("EfNVTX.C");
+  cnvtx->SaveAs("EfNVTX.root");
+
 
 
   // sig-eff/bkg-eff plots
@@ -272,6 +308,7 @@ void EfCOMP(){
   Lptr->Divide(Lptb);
   Lptr->Draw();
   Lptr->GetXaxis()->SetTitle("Pt GeVc^{-1}");
+  Lptr->GetXaxis()->SetRangeUser(0,300.0);
   Lptr->GetYaxis()->SetTitle("Sig Eff/Bkg Eff");
   Lptr->GetYaxis()->SetRangeUser(0,10.0);
   Lptr->SetLineColor(kGray + 3);
@@ -290,13 +327,13 @@ void EfCOMP(){
   TH1F *Tptr = (TH1F*)Tpts->Clone();
   Tptr->Divide(Tptb);
   Tptr->Draw("esame");
-  Tptr->SetMarkerColor(kYellow);
-  Tptr->SetLineColor(kYellow );
+  Tptr->SetMarkerColor(kGreen);
+  Tptr->SetLineColor(kGreen);
   Tptr->SetMarkerStyle(20);
   Tptr->SetMarkerSize(0.5);
 
   
-  lptr = new TLegend(0.55,0.15,0.9,0.3);
+  TLegend *lptr = new TLegend(0.55,0.15,0.9,0.3);
   lptr->SetBorderSize(0);
   lptr->SetFillColor(0);
   lptr->AddEntry(Lptr,"Loose","lp");
@@ -304,9 +341,9 @@ void EfCOMP(){
   lptr->AddEntry(Tptr,"Tight","lp");
   lptr->Draw("same");     
 
-
   crpt->SaveAs("EfSBR_PT.png");
-
+  crpt->SaveAs("EfSBR_PT.C");
+  crpt->SaveAs("EfSBR_PT.root");
 
 
 
@@ -316,6 +353,7 @@ void EfCOMP(){
   Letar->Divide(Letab);
   Letar->Draw();
   Letar->GetXaxis()->SetTitle("#eta");
+  Letar->GetXaxis()->SetRangeUser(-3.0,3.0);
   Letar->GetYaxis()->SetTitle("Sig Eff/Bkg Eff");
   Letar->GetYaxis()->SetRangeUser(0,10.0);
   Letar->SetLineColor(kGray + 3);
@@ -334,13 +372,13 @@ void EfCOMP(){
   TH1F *Tetar = (TH1F*)Tetas->Clone();
   Tetar->Divide(Tetab);
   Tetar->Draw("esame");
-  Tetar->SetMarkerColor(kYellow);
-  Tetar->SetLineColor(kYellow );
+  Tetar->SetMarkerColor(kGreen);
+  Tetar->SetLineColor(kGreen);
   Tetar->SetMarkerStyle(20);
   Tetar->SetMarkerSize(0.5);
 
   
-  letar = new TLegend(0.55,0.15,0.9,0.3);
+  TLegend *letar = new TLegend(0.55,0.15,0.9,0.3);
   letar->SetBorderSize(0);
   letar->SetFillColor(0);
   letar->AddEntry(Letar,"Loose","lp");
@@ -350,7 +388,8 @@ void EfCOMP(){
 
 
   creta->SaveAs("EfSBR_ETA.png");
-
+  creta->SaveAs("EfSBR_ETA.C");
+  creta->SaveAs("EfSBR_ETA.root");
 
 
 
@@ -378,13 +417,13 @@ void EfCOMP(){
   TH1F *Tnvtxr = (TH1F*)Tnvtxs->Clone();
   Tnvtxr->Divide(Tnvtxb);
   Tnvtxr->Draw("esame");
-  Tnvtxr->SetMarkerColor(kYellow);
-  Tnvtxr->SetLineColor(kYellow );
+  Tnvtxr->SetMarkerColor(kGreen);
+  Tnvtxr->SetLineColor(kGreen);
   Tnvtxr->SetMarkerStyle(20);
   Tnvtxr->SetMarkerSize(0.5);
 
   
-  lnvtxr = new TLegend(0.55,0.15,0.9,0.3);
+  TLegend *lnvtxr = new TLegend(0.55,0.15,0.9,0.3);
   lnvtxr->SetBorderSize(0);
   lnvtxr->SetFillColor(0);
   lnvtxr->AddEntry(Lnvtxr,"Loose","lp");
@@ -394,6 +433,9 @@ void EfCOMP(){
 
 
   crnvtx->SaveAs("EfSBR_NVTX.png");
+  crnvtx->SaveAs("EfSBR_NVTX.C");
+  crnvtx->SaveAs("EfSBR_NVTX.root");
+
 
 
   /*
@@ -561,13 +603,7 @@ void EfCOMP(){
   Mnvtxb->Write();
   Tnvtxb->Write();
 
-  
-
-
-
-
-
 
 }
 
-//  LocalWords:  ceta
+

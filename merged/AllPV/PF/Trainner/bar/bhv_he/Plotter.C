@@ -20,6 +20,10 @@
 #include <string.h>
 #include <fstream>
 
+
+#include "tdrstyle.C"
+
+
 void Plotter(){
 
 
@@ -27,9 +31,9 @@ void Plotter(){
   setTDRStyle();
   gStyle->SetOptStat(0);
 
-  TH1F *Letas = new TH1F("Letas","Loose Cut Efficiency Eta",100,0,5);
-  TH1F *Metas = new TH1F("Metas","Medium Cut Efficiency Eta",100,0,5);
-  TH1F *Tetas = new TH1F("Tetas","Tight Cut Efficiency Eta",100,0,5); 
+  TH1F *Letas = new TH1F("Letas","Loose Cut Efficiency Eta",100,-3,3);
+  TH1F *Metas = new TH1F("Metas","Medium Cut Efficiency Eta",100,-3,3);
+  TH1F *Tetas = new TH1F("Tetas","Tight Cut Efficiency Eta",100,-3,3); 
 
   TH1F *Lpts = new TH1F("Lpts","Loose Cut Efficiency pt",100,0,200);
   TH1F *Mpts = new TH1F("Mpts","Medium Cut Efficiency pt",100,0,200);
@@ -40,9 +44,9 @@ void Plotter(){
   TH1F *Tnvtxs = new TH1F("Tnvtxs","Tight Cut Efficiency vertices",100,0,100); 
 
 
-  TH1F *Letab = new TH1F("Letab","Loose Cut b Efficiency Eta",100,0,5);
-  TH1F *Metab = new TH1F("Metab","Medium Cut b Efficiency Eta",100,0,5);
-  TH1F *Tetab = new TH1F("Tetab","Tight Cut b Efficiency Eta",100,0,5); 
+  TH1F *Letab = new TH1F("Letab","Loose Cut b Efficiency Eta",100,-3,3);
+  TH1F *Metab = new TH1F("Metab","Medium Cut b Efficiency Eta",100,-3,3);
+  TH1F *Tetab = new TH1F("Tetab","Tight Cut b Efficiency Eta",100,-3,3); 
 
 
   TH1F *Lptb = new TH1F("Lptb","Loose Cut b Efficiency pt",100,0,200);
@@ -64,35 +68,88 @@ void Plotter(){
 
 
 
+  TString fname = "Eff.root";
+  TFile *input = TFile::Open( fname );
+  if (!input || !input->IsOpen()) {
+    cout << "\nERROR! Could not open root file " << fname
+         << endl;
+    exit(0);
+  }
+
+
+  TH1F *EffETA0 = (TH1F*)input->Get("EffETA0");
+  TH1F *EffETAL = (TH1F*)input->Get("EffETAL");
+  TH1F *EffETAM = (TH1F*)input->Get("EffETAM");
+  TH1F *EffETAT = (TH1F*)input->Get("EffETAT");
+
+  TH1F *EffETA0b = (TH1F*)input->Get("EffETA0b");
+  TH1F *EffETALb = (TH1F*)input->Get("EffETALb");
+  TH1F *EffETAMb = (TH1F*)input->Get("EffETAMb");
+  TH1F *EffETATb = (TH1F*)input->Get("EffETATb");
+  
+
+
+  TH1F *EffPT0 = (TH1F*)input->Get("EffPT0");
+  TH1F *EffPTL = (TH1F*)input->Get("EffPTL");
+  TH1F *EffPTM = (TH1F*)input->Get("EffPTM");
+  TH1F *EffPTT = (TH1F*)input->Get("EffPTT");
+
+  TH1F *EffPT0b = (TH1F*)input->Get("EffPT0b");
+  TH1F *EffPTLb = (TH1F*)input->Get("EffPTLb");
+  TH1F *EffPTMb = (TH1F*)input->Get("EffPTMb");
+  TH1F *EffPTTb = (TH1F*)input->Get("EffPTTb");
 
 
 
-  Letas->Divide(EffETALb,EffETA0,1.,1.,"B");
-  Metas->Divide(EffETAMb,EffETA0,1.,1.,"B");
-  Tetas->Divide(EffETATb,EffETA0,1.,1.,"B");
+  TH1F *EffNVTX0 = (TH1F*)input->Get("EffNVTX0");
+  TH1F *EffNVTXL = (TH1F*)input->Get("EffNVTXL");
+  TH1F *EffNVTXM = (TH1F*)input->Get("EffNVTXM");
+  TH1F *EffNVTXT = (TH1F*)input->Get("EffNVTXT");
+
+  TH1F *EffNVTX0b = (TH1F*)input->Get("EffNVTX0b");
+  TH1F *EffNVTXLb = (TH1F*)input->Get("EffNVTXLb");
+  TH1F *EffNVTXMb = (TH1F*)input->Get("EffNVTXMb");
+  TH1F *EffNVTXTb = (TH1F*)input->Get("EffNVTXTb");
+
+
+
+
+  Letas->Divide(EffETAL,EffETA0,1.,1.,"B");
+  Metas->Divide(EffETAM,EffETA0,1.,1.,"B");
+  Tetas->Divide(EffETAT,EffETA0,1.,1.,"B");
   
   Letab->Divide(EffETALb,EffETA0b,1.,1.,"B");
   Metab->Divide(EffETAMb,EffETA0b,1.,1.,"B");
   Tetab->Divide(EffETATb,EffETA0b,1.,1.,"B");
   
 
+
   Lpts->Divide(EffPTL,EffPT0,1.,1.,"B");
   Mpts->Divide(EffPTM,EffPT0,1.,1.,"B");
   Tpts->Divide(EffPTT,EffPT0,1.,1.,"B");
-
   
   Lptb->Divide(EffPTLb,EffPT0b,1.,1.,"B");
   Mptb->Divide(EffPTMb,EffPT0b,1.,1.,"B");
   Tptb->Divide(EffPTTb,EffPT0b,1.,1.,"B");
 
+
+
   Lnvtxs->Divide(EffNVTXL,EffNVTX0,1.,1.,"B");
   Mnvtxs->Divide(EffNVTXM,EffNVTX0,1.,1.,"B");
   Tnvtxs->Divide(EffNVTXT,EffNVTX0,1.,1.,"B");
-
   
   Lnvtxb->Divide(EffNVTXL,EffNVTX0b,1.,1.,"B");
   Mnvtxb->Divide(EffNVTXM,EffNVTX0b,1.,1.,"B");
   Tnvtxb->Divide(EffNVTXT,EffNVTX0b,1.,1.,"B");
+
+
+
+  TH1F *EffPTs = (TH1F*)input->Get("EffPTs");
+  TH1F *EffPTt = (TH1F*)input->Get("EffPTt");
+  TH1F *EffPTp = (TH1F*)input->Get("EffPTp");
+  TH1F *EffPTc = (TH1F*)input->Get("EffPTc");
+  TH1F *EffPTn = (TH1F*)input->Get("EffPTn");
+
 
 
   // the branch  out cuts 
@@ -114,9 +171,7 @@ void Plotter(){
   c1->cd(1);
   Mnvtxs->Draw();
   Mnvtxs->GetYaxis()->SetRangeUser(0,1.0);
- 
   Mnvtxs->GetXaxis()->SetRangeUser(0,50);
- 
   Mnvtxs->GetXaxis()->SetTitle("# Nvtx");
   Mnvtxs->SetLineColor(kRed);
   Mnvtxs->SetMarkerColor(kRed);
@@ -127,7 +182,6 @@ void Plotter(){
   c1->cd(2);
   Mpts->Draw();
   Mpts->GetYaxis()->SetRangeUser(0,1.0);
- 
   Mpts->GetXaxis()->SetTitle("Pt GeVc^{-1}");
   Mpts->SetLineColor(kRed);
   Mpts->SetMarkerColor(kRed);
@@ -139,14 +193,19 @@ void Plotter(){
   Metas->Draw();
   Metas->GetYaxis()->SetRangeUser(0,1.0);
   Metas->GetXaxis()->SetRangeUser(1.5,3.0);
- 
   Metas->GetXaxis()->SetTitle("#eta");
   Metas->SetLineColor(kRed);
   Metas->SetMarkerColor(kRed);
   Metas->SetMarkerSize(0.5);
   Metab->SetMarkerSize(0.5);
   Metab->Draw("same");
+  
+
   c1->SaveAs("MediumEffBck.png");
+  c1->SaveAs("MediumEffBck.C");
+  c1->SaveAs("MediumEffBck.root");
+
+
 
   TCanvas *c2  = new TCanvas("c2","Loose",600,600);
   c2->Divide(2,2);
@@ -156,7 +215,6 @@ void Plotter(){
   Lnvtxs->GetXaxis()->SetTitle("# Nvtx");
   Lnvtxs->GetYaxis()->SetRangeUser(0,1.0);
   Lnvtxs->GetXaxis()->SetRangeUser(0,50);
-
   Lnvtxs->SetLineColor(kRed);
   Lnvtxs->SetMarkerColor(kRed);
   Lnvtxs->SetMarkerSize(0.5);
@@ -173,24 +231,21 @@ void Plotter(){
   Lptb->SetMarkerSize(0.5);
   Lptb->Draw("esame");
 
-
-
   c2->cd(3);
   Letas->Draw();
   Letas->GetXaxis()->SetTitle("#eta");
   Letas->GetYaxis()->SetRangeUser(0,1.0);
   Letas->GetXaxis()->SetRangeUser(1.5,3.0);
-  
   Letas->SetLineColor(kRed);
   Letas->SetMarkerColor(kRed);
   Letas->SetMarkerSize(0.5);
   Letab->SetMarkerSize(0.5);
-
   Letab->Draw("esame");
+
   
-
-
   c2->SaveAs("LooseEffBck.png");
+  c2->SaveAs("LooseEffBck.C");
+  c2->SaveAs("LooseEffBck.root");
 
 
 
@@ -202,19 +257,16 @@ void Plotter(){
   Tnvtxs->Draw();
   Tnvtxs->GetYaxis()->SetRangeUser(0,1.0);
   Tnvtxs->GetXaxis()->SetRangeUser(0,50);
- 
   Tnvtxs->GetXaxis()->SetTitle("# Nvtx");
   Tnvtxs->SetLineColor(kRed);
   Tnvtxs->SetMarkerColor(kRed);
   Tnvtxs->SetMarkerSize(0.5);
   Tnvtxb->SetMarkerSize(0.5);
-
   Tnvtxb->Draw("esame");
   
   c3->cd(2);
   Tpts->Draw();
   Tpts->GetYaxis()->SetRangeUser(0,1.0);
-  
   Tpts->GetXaxis()->SetTitle("Pt GeVc^{-1}");
   Tpts->SetLineColor(kRed);
   Tpts->SetMarkerColor(kRed);
@@ -222,21 +274,21 @@ void Plotter(){
   Tptb->SetMarkerSize(0.5);
   Tptb->Draw("esame");
 
-
-
   c3->cd(3);
   Tetas->Draw();
   Tetas->GetYaxis()->SetRangeUser(0,1.0);
- 
   Tetas->GetXaxis()->SetTitle("#eta");
   Tetas->GetXaxis()->SetRangeUser(1.5,3.0);
   Tetas->SetLineColor(kRed);
   Tetas->SetMarkerColor(kRed);
   Tetas->SetMarkerSize(0.5);
   Tetab->SetMarkerSize(0.5);
-
   Tetab->Draw("same");
+
+
   c3->SaveAs("TightEffBck.png");
+  c3->SaveAs("TightEffBck.C");
+  c3->SaveAs("TightEffBck.root");
 
  
 
@@ -245,7 +297,6 @@ void Plotter(){
   c10->Divide(3,2);
   
   c10->cd(1);  
-
   Sieaft->Draw();
   Sieaft->SetMarkerSize(0.5);
   Sieaft->GetYaxis()->SetTitle("Only Sieie Cut Efficiency");
@@ -276,6 +327,8 @@ void Plotter(){
   IsoNaft->GetXaxis()->SetTitle("Pt GeVc^{-1}");
   
   c10->SaveAs("BranchOutCuts.png");
+  c10->SaveAs("BranchOutCuts.C");
+  c10->SaveAs("BranchOutCuts.root");
 
 
 }

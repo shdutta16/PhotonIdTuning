@@ -5,6 +5,8 @@
 // found on file: ../CompatV.root
 //////////////////////////////////////////////////////////
 
+#pragma once
+
 #ifndef CutID_h
 #define CutID_h
 
@@ -86,17 +88,21 @@ public :
 
 #endif
 
+
+
+
 #ifdef CutID_cxx
+
+
 CutID::CutID(TTree *tree) : fChain(0) 
 {
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-     //TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("sp15_4th.root");
-     TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/uscms_data/d3/asroy/PhotonIdTuning/CMSSW_7_3_5/src/CutBasedPhoID2016/merged/gjets_sp16_pt15to6000_25ns.root");
+     TFile *f = new TFile("/eos/cms/store/group/phys_egamma/shdutta/PhotonIdTuning/ntuple_combined_GJet_DoubleEMEnriched_MGG_Run3Summer19_2021.root");
+
       if (!f || !f->IsOpen()) {
-	//f = new TFile("sp15_4th.root");
-         f = new TFile("/uscms_data/d3/asroy/PhotonIdTuning/CMSSW_7_3_5/src/CutBasedPhoID2016/merged/gjets_sp16_pt15to6000_25ns.root");
+	cout << "\nERROR! Could not open root file" << endl;
       }
       f->GetObject("t1",tree);
 
@@ -167,6 +173,8 @@ void CutID::Init(TTree *tree)
    Notify();
 }
 
+
+
 Bool_t CutID::Notify()
 {
    // The Notify() function is called when a new file is opened. This
@@ -178,6 +186,8 @@ Bool_t CutID::Notify()
    return kTRUE;
 }
 
+
+
 void CutID::Show(Long64_t entry)
 {
 // Print contents of entry.
@@ -185,6 +195,9 @@ void CutID::Show(Long64_t entry)
    if (!fChain) return;
    fChain->Show(entry);
 }
+
+
+
 Int_t CutID::Cut(Long64_t entry)
 {
 // This function may be called from Loop.

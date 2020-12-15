@@ -23,13 +23,50 @@
 void Etas(){
 
 
+  TH1F *Letas = new TH1F("Letas","Loose Cut Efficiency Eta",100,-3,3);
+  TH1F *Metas = new TH1F("Metas","Medium Cut Efficiency Eta",100,-3,3);
+  TH1F *Tetas = new TH1F("Tetas","Tight Cut Efficiency Eta",100,-3,3);
+
+  TH1F *Letab = new TH1F("Letab","Loose Cut b Efficiency Eta",100,-3,3);
+  TH1F *Metab = new TH1F("Metab","Medium Cut b Efficiency Eta",100,-3,3);
+  TH1F *Tetab = new TH1F("Tetab","Tight Cut b Efficiency Eta",100,-3,3);
 
 
 
-  TCanvas *ceta = new TCanvas("cpt","Pt Eff",500,500);
+  TString fname = "Eff1.root";
+  TFile *input = TFile::Open( fname );
+  if (!input || !input->IsOpen()) {
+    cout << "\nERROR! Could not open root file " << fname
+         << endl;
+    exit(0);
+  }
+
+  TH1F *EffETA0 = (TH1F*)input->Get("EffETA0");
+  TH1F *EffETAL = (TH1F*)input->Get("EffETAL");
+  TH1F *EffETAM = (TH1F*)input->Get("EffETAM");
+  TH1F *EffETAT = (TH1F*)input->Get("EffETAT");
+
+  TH1F *EffETA0b = (TH1F*)input->Get("EffETA0b");
+  TH1F *EffETALb = (TH1F*)input->Get("EffETALb");
+  TH1F *EffETAMb = (TH1F*)input->Get("EffETAMb");
+  TH1F *EffETATb = (TH1F*)input->Get("EffETATb");
+
+
+
+  Letas->Divide(EffETAL,EffETA0,1.,1.,"B");
+  Metas->Divide(EffETAM,EffETA0,1.,1.,"B");
+  Tetas->Divide(EffETAT,EffETA0,1.,1.,"B");
+
+  Letab->Divide(EffETALb,EffETA0b,1.,1.,"B");
+  Metab->Divide(EffETAMb,EffETA0b,1.,1.,"B");
+  Tetab->Divide(EffETATb,EffETA0b,1.,1.,"B");
+
+
+  TCanvas *ceta = new TCanvas("ceta","Eta Eff",500,500);
   ceta->cd();
   Letas->GetXaxis()->SetTitle("#eta");
-  Letas->GetXaxis()->SetRangeUser(-3,3);                                                                
+  Letas->GetXaxis()->SetRangeUser(-3,3);                                                            
+    
   //  Letas->GetYaxis()->SetRangeUser(-5,5);
   Letas->SetLineColor(kGray + 3);
   Letas->SetMarkerColor(kGray +3);
@@ -69,8 +106,8 @@ void Etas(){
   ceta->Update();
 
   ceta->SaveAs("EfETA_all.png");
-
-
+  ceta->SaveAs("EfETA_all.C");
+  ceta->SaveAs("EfETA_all.root");
 
 
 

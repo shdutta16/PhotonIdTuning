@@ -1,8 +1,10 @@
+#pragma once
+
 #include "TStyle.h"
 
 // tdrGrid: Turns the grid lines on (true) or off (false)
 
-void tdrGrid(bool gridOn) {
+void tdrGrid(bool gridOn, TStyle *tdrStyle) {
   tdrStyle->SetPadGridX(gridOn);
   tdrStyle->SetPadGridY(gridOn);
 }

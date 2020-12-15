@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include <TRandom.h>
 #include <TGraph.h>
-#include <vector.h>
+#include <vector>
 #include <new>
 #include "sstream"
 #include <string>
@@ -11,16 +11,24 @@
 //#include <ErrCalc.C>
 
 
+void ErrCalc(TH1F*, int, double, double&, double&, double&);
+
 void Ex(){
 
   
   TFile *f1 = new TFile("../../CutTMVABarrel90_HPT.root");
-  //TFile *f1 = new TFile("/uscms_data/d3/asroy/PhotonIdTuning/CMSSW_7_3_5/src/CutBasedPhoID2016/codes/merged/AllPV/PF/ISOPT/CutTMVABarrel90_HPT.root");
+  if (!f1 || !f1->IsOpen()) {
+    cout << "\nERROR! Could not open root file" << endl;
+    exit(0);
+  }
+
   float genPt,ppt,peta,Sie_ie,iso_P,iso_C,iso_N,to_e,weighT;
   int nvtx;
   gStyle->SetOptStat(0);
 
-  //Signal Tree                                                                        
+  //Signal Tree
+  TTree *t_S = (TTree*)f1->Get("t_S");
+                           
   t_S->SetBranchAddress("Sieie",&Sie_ie);
   t_S->SetBranchAddress("isoP",&iso_P);
   t_S->SetBranchAddress("isoC",&iso_C);
@@ -33,7 +41,9 @@ void Ex(){
   t_S->SetBranchAddress("Ppt",&ppt);
   t_S->SetBranchAddress("genPt",&genPt);
 
-  //Background Tree                                                                    
+  //Background Tree
+  TTree *t_B = (TTree*)f1->Get("t_B");
+                                                 
   t_B->SetBranchAddress("Sieie",&Sie_ie);
   t_B->SetBranchAddress("isoP",&iso_P);
   t_B->SetBranchAddress("isoC",&iso_C);
@@ -58,12 +68,18 @@ void Ex(){
   }
 
   cout<<"Builded the 2d HISTOGRAM"<<endl;
+  
 
 
+  TH2F *his2 = (TH2F*)isoPptS->Clone();
 
-  TH2F *his2 = isoPptS->Clone();
-
-
+  string fn_his2 = "Photon_IsoNeutralVsPt.png";
+  TCanvas *c4 = new TCanvas("c4","Iso Neutral vs Pt 2D Histogram",1000,800);
+  gPad->SetRightMargin(0.2);
+  his2->GetXaxis()->SetTitle("pT");
+  his2->GetYaxis()->SetTitle("Iso Neutral");
+  his2->Draw("COLZ");
+  c4->SaveAs(fn_his2.c_str());
 
   int dim = his2->GetXaxis()->GetNbins(); 
   
@@ -85,9 +101,9 @@ void Ex(){
     double errXH = 0; 
     double errXL = 0; 
     
-    r22 = his2->ProjectionY(" ",i,i+1," ");
+    TH1F *r22 = (TH1F*)his2->ProjectionY(" ",i,i+1," ");
     
-    TH1F *h1 = r22->Clone();
+    TH1F *h1 = (TH1F*)r22->Clone();
     ErrCalc(h1,i,0.950,xval,errXL,errXH);
     
     cout<<"bin :"<<i<<" "<<xval<<"-"<<errXL<<"+ " << errXH<<endl;
@@ -101,12 +117,13 @@ void Ex(){
     bincerL[i-1] = 0;
     bincerH[i-1] = 0;
   }
+  
   TGraphAsymmErrors * IsoptScaling = new TGraphAsymmErrors(dim,binc,cutV,bincerL,bincerH,errVL,errVH);
 
   // double DownL = his2->GetXaxis()->GetBinCenter(1);
   //double UpperL = his2->GetXaxis()->GetBinCenter(dim);
   
-  TF1 *fn1 = new TF1("fn1","[0]*x + [1]",20,700);
+  TF1 *fn1 = new TF1("fn1","[0]*x + [1]",20,600);
   IsoptScaling->Fit("fn1","R");
 
   gStyle->SetOptFit(1);
@@ -121,11 +138,13 @@ void Ex(){
   IsoptScaling->GetXaxis()->SetTitle("Photon Pt GeVc^{-1}");
   IsoptScaling->GetYaxis()->SetTitle("PF::gamma rho corr. Isolation Contour ");
   c3->cd(2); 
+  c3->SetRightMargin(0.3);
+  c3->SetLogz();
   his2->Draw("colz");
   his2->GetXaxis()->SetTitle("Pt GeVc^{-1}");
   his2->GetYaxis()->SetTitle("Isolation  PF::gamma rho corr. ");
 
-  c3->SaveAs("final_800.png");
+  c3->SaveAs("final_500.png");
 
   //lets fit this graph
   
@@ -159,10 +178,10 @@ void ErrCalc(TH1F *HIST,int binxn,double perc,double & X_val, double & errXL,dou
   }
   */ 
 
-  TH1F *h1 = HIST->Clone();
+  TH1F *h1 = (TH1F*)HIST->Clone();
   int arsize = h1->GetXaxis()->GetNbins(); 
   
-  if(h1->GetEntries() == 0 ) goto endd; 
+  if(h1->GetEntries() != 0 ){ // goto endd; 
 
   double *eff; 
   double *eff_err; 
@@ -343,7 +362,9 @@ void ErrCalc(TH1F *HIST,int binxn,double perc,double & X_val, double & errXL,dou
     delete[] err_up; 
     delete[] err_down; 
     
- endd:
+  }
+
+    //endd:
     if(h1->GetEntries() == 0)  cout<<"Empty histo"<<endl;
 
 }

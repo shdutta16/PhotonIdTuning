@@ -3,15 +3,9 @@ void Comp(){
   //  TFile *f1 = new TFile("RelBarHBHV.root");
   TFile *f2 = new TFile("barh.root");
   
-  /*
-  f1->cd();
-  TH1F *RELBAR =  Lpts->Clone();
-  TH1F *RELBARb =  Lptb->Clone();
-  */
   f2->cd();
   TH1F *sCA =  Lpts->Clone();
   TH1F *sCAb =  Lptb->Clone();
-
 
 
 

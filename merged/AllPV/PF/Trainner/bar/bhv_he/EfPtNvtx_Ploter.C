@@ -251,7 +251,7 @@ void EfPtNvtx_Ploter(){
   Tpts->Draw();
   Tpts->GetYaxis()->SetRangeUser(0,1.0);
  
- Tpts->GetXaxis()->SetTitle("Pt GeVc^{-1}");
+  Tpts->GetXaxis()->SetTitle("Pt GeVc^{-1}");
   Tpts->SetLineColor(kRed);
   Tpts->SetMarkerColor(kRed);
   Tpts->SetMarkerSize(0.5);
@@ -294,7 +294,7 @@ void EfPtNvtx_Ploter(){
   c6->SaveAs("flattening.png");
 
 
-    l1 = new TLegend(0.4961983,0.6604796,0.6976886,0.8603222);
+  l1 = new TLegend(0.4961983,0.6604796,0.6976886,0.8603222);
   l1->SetFillColor(0);
   l1->SetBorderSize(0);
   l1->SetTextSize(0.02);

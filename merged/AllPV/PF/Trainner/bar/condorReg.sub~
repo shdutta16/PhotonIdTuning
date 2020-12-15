@@ -1,0 +1,27 @@
+universe = vanilla
+
+#+JobFlavour = "longlunch"
+
+Executable = execReg.sh
+
+output               = ./condorJob/$(Cluster)_$(Process)_job.out 
+error                = ./condorJob/$(Cluster)_$(Process)_job.err
+Log                  = ./condorJob/$(Cluster)_$(Process)_job.log
+
+#Notification           = never
+should_transfer_files   = IF_NEEDED
+when_to_transfer_output = ON_EXIT
+
+#on_exit_remove       = (ExitBySignal == FALSE && (ExitCode == 0 || ExitCode == 42 || NumJobStarts>3))
+
+#+IsFastQueueJob      = True
+
+getenv               = True
+#request_memory       = 6GB
+#request_disk         = 2048000
+
+Transfer_Input_Files = Reg.C,99per.txt
+
+#+AccountingGroup = "group_u_CMS.u_zh.priority"
+
+Queue

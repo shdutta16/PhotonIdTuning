@@ -1,17 +1,21 @@
+#pragma once 
+
 #include "TStyle.h"
 
-// tdrGrid: Turns the grid lines on (true) or off (false)
+// tdrGrid: Turns the grid lines on (true) or off (false)                     
 
-void tdrGrid(bool gridOn) {
+void tdrGrid(bool gridOn, TStyle *tdrStyle) {
   tdrStyle->SetPadGridX(gridOn);
   tdrStyle->SetPadGridY(gridOn);
 }
+
 
 // fixOverlay: Redraws the axis
 
 void fixOverlay() {
   gPad->RedrawAxis();
 }
+
 
 void setTDRStyle() {
   TStyle *tdrStyle = new TStyle("tdrStyle","Style for P-TDR");
@@ -165,3 +169,4 @@ void setTDRStyle() {
   tdrStyle->cd();
 
 }
+

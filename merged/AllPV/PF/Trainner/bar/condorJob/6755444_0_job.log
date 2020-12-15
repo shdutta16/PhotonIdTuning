@@ -1,0 +1,92 @@
+000 (6755444.000.000) 11/25 06:52:40 Job submitted from host: <188.185.71.142:9618?addrs=188.185.71.142-9618+[2001-1458-d00-7--100-388]-9618&alias=bigbird09.cern.ch&noUDP&sock=schedd_1971_8541_66>
+...
+040 (6755444.000.000) 11/25 07:09:56 Started transferring input files
+	Transferring to host: <188.184.197.48:9618?addrs=188.184.197.48-9618+[2001-1458-301-103--100-185]-9618&noUDP&sock=2411_847b_9846>
+...
+040 (6755444.000.000) 11/25 07:09:57 Finished transferring input files
+...
+001 (6755444.000.000) 11/25 07:09:57 Job executing on host: <188.184.197.48:9618?addrs=188.184.197.48-9618+[2001-1458-301-103--100-185]-9618&noUDP&sock=2219_a0be_3>
+...
+006 (6755444.000.000) 11/25 07:10:01 Image size of job updated: 62712
+	0  -  MemoryUsage of job (MB)
+	0  -  ResidentSetSize of job (KB)
+...
+040 (6755444.000.000) 11/25 07:10:01 Started transferring output files
+...
+040 (6755444.000.000) 11/25 07:10:01 Finished transferring output files
+...
+004 (6755444.000.000) 11/25 07:10:01 Job was evicted.
+	(0) Job terminated and was requeued
+		Usr 0 00:00:01, Sys 0 00:00:00  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+	1943  -  Run Bytes Sent By Job
+	6324  -  Run Bytes Received By Job
+	(1) Normal termination (return value 1)
+	The job attribute OnExitRemove expression '(ExitBySignal == false && (ExitCode == 0 || ExitCode == 42 || NumJobStarts > 3))' evaluated to FALSE
+...
+040 (6755444.000.000) 11/25 07:10:16 Started transferring input files
+	Transferring to host: <188.184.196.209:9618?addrs=188.184.196.209-9618+[2001-1458-301-102--100-a3]-9618&noUDP&sock=32013_cdef_104414>
+...
+040 (6755444.000.000) 11/25 07:10:16 Finished transferring input files
+...
+001 (6755444.000.000) 11/25 07:10:17 Job executing on host: <188.184.196.209:9618?addrs=188.184.196.209-9618+[2001-1458-301-102--100-a3]-9618&noUDP&sock=5704_0c4c_3>
+...
+040 (6755444.000.000) 11/25 07:10:19 Started transferring output files
+...
+040 (6755444.000.000) 11/25 07:10:19 Finished transferring output files
+...
+004 (6755444.000.000) 11/25 07:10:19 Job was evicted.
+	(0) Job terminated and was requeued
+		Usr 0 00:00:01, Sys 0 00:00:00  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+	1942  -  Run Bytes Sent By Job
+	6324  -  Run Bytes Received By Job
+	(1) Normal termination (return value 1)
+	The job attribute OnExitRemove expression '(ExitBySignal == false && (ExitCode == 0 || ExitCode == 42 || NumJobStarts > 3))' evaluated to FALSE
+...
+040 (6755444.000.000) 11/25 07:10:22 Started transferring input files
+	Transferring to host: <188.184.254.29:9618?addrs=188.184.254.29-9618+[2001-1458-301-8--100-27]-9618&noUDP&sock=24275_aef4_108063>
+...
+040 (6755444.000.000) 11/25 07:10:22 Finished transferring input files
+...
+001 (6755444.000.000) 11/25 07:10:23 Job executing on host: <188.184.254.29:9618?addrs=188.184.254.29-9618+[2001-1458-301-8--100-27]-9618&noUDP&sock=5614_50c6_3>
+...
+040 (6755444.000.000) 11/25 07:10:25 Started transferring output files
+...
+040 (6755444.000.000) 11/25 07:10:25 Finished transferring output files
+...
+004 (6755444.000.000) 11/25 07:10:25 Job was evicted.
+	(0) Job terminated and was requeued
+		Usr 0 00:00:01, Sys 0 00:00:00  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+	1942  -  Run Bytes Sent By Job
+	6324  -  Run Bytes Received By Job
+	(1) Normal termination (return value 1)
+	The job attribute OnExitRemove expression '(ExitBySignal == false && (ExitCode == 0 || ExitCode == 42 || NumJobStarts > 3))' evaluated to FALSE
+...
+040 (6755444.000.000) 11/25 07:30:02 Started transferring input files
+	Transferring to host: <188.184.198.184:9618?addrs=188.184.198.184-9618+[2001-1458-301-c1--100-3c1]-9618&noUDP&sock=18880_6af9_10688>
+...
+040 (6755444.000.000) 11/25 07:30:02 Finished transferring input files
+...
+001 (6755444.000.000) 11/25 07:30:03 Job executing on host: <188.184.198.184:9618?addrs=188.184.198.184-9618+[2001-1458-301-c1--100-3c1]-9618&noUDP&sock=18745_16de_3>
+...
+040 (6755444.000.000) 11/25 07:30:05 Started transferring output files
+...
+040 (6755444.000.000) 11/25 07:30:05 Finished transferring output files
+...
+005 (6755444.000.000) 11/25 07:30:05 Job terminated.
+	(1) Normal termination (return value 1)
+		Usr 0 00:00:01, Sys 0 00:00:00  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:01, Sys 0 00:00:00  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	1943  -  Run Bytes Sent By Job
+	6324  -  Run Bytes Received By Job
+	7770  -  Total Bytes Sent By Job
+	25296  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   Cpus                 :        0        3         3 
+	   Disk (KB)            :       37       37    261473 
+	   Memory (MB)          :        0     6144      6200 
+...

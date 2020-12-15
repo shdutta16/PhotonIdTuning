@@ -5,6 +5,8 @@
 // found on file: ../CompatV.root
 //////////////////////////////////////////////////////////
 
+#pragma once
+
 #ifndef CutID_h
 #define CutID_h
 
@@ -92,18 +94,25 @@ public :
 
 #endif
 
+
+
+
 #ifdef CutID_cxx
+
 CutID::CutID(TTree *tree) : fChain(0) 
 {
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-     //TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("sp15_4th.root");
-     TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/uscms_data/d3/asroy/PhotonIdTuning/CMSSW_7_3_5/src/CutBasedPhoID2016/merged/spring16_gjets_25ns.root");
-     //TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("isopt/pt15to6000_25ns.root");
+     TString f_name = "/eos/cms/store/group/phys_egamma/shdutta/PhotonIdTuning/ntuple_co\
+mbined_GJet_DoubleEMEnriched_MGG_Run3Summer19_2021.root";
+
+     TFile *f = new TFile( f_name );
+
       if (!f || !f->IsOpen()) {
-	//f = new TFile("sp15_4th.root");
-         f = new TFile("/uscms_data/d3/asroy/PhotonIdTuning/CMSSW_7_3_5/src/CutBasedPhoID2016/merged/spring16_gjets_25ns.root");
+	cout << "\nERROR! Could not open root file " << fname 
+	     << endl;
+	exit(0);
       }
       f->GetObject("t1",tree);
 
@@ -111,11 +120,13 @@ CutID::CutID(TTree *tree) : fChain(0)
    Init(tree);
 }
 
+
 CutID::~CutID()
 {
    if (!fChain) return;
    delete fChain->GetCurrentFile();
 }
+
 
 Int_t CutID::GetEntry(Long64_t entry)
 {
@@ -123,6 +134,9 @@ Int_t CutID::GetEntry(Long64_t entry)
    if (!fChain) return 0;
    return fChain->GetEntry(entry);
 }
+
+
+
 Long64_t CutID::LoadTree(Long64_t entry)
 {
 // Set the environment to read one entry
@@ -169,9 +183,9 @@ void CutID::Init(TTree *tree)
    fChain->SetBranchAddress("gedPhoIso", &gedPhoIso, &b_gedPhoIso);
    fChain->SetBranchAddress("gedChgIso", &gedChgIso, &b_gedChgIso);
    fChain->SetBranchAddress("gedNeuIso", &gedNeuIso, &b_gedNeuIso);
-   fChain->SetBranchAddress("PhPUPPIPhoIso", &PhPUPPIPhoIso, &b_PhPUPPIPhoIso);
-   fChain->SetBranchAddress("PhPUPPIChIso", &PhPUPPIChIso, &b_PhPUPPIChIso);
-   fChain->SetBranchAddress("PhPUPPINeuIso", &PhPUPPINeuIso, &b_PhPUPPINeuIso);
+   //fChain->SetBranchAddress("PhPUPPIPhoIso", &PhPUPPIPhoIso, &b_PhPUPPIPhoIso);
+   //fChain->SetBranchAddress("PhPUPPIChIso", &PhPUPPIChIso, &b_PhPUPPIChIso);
+   //fChain->SetBranchAddress("PhPUPPINeuIso", &PhPUPPINeuIso, &b_PhPUPPINeuIso);
    fChain->SetBranchAddress("gedPhPixSeed", &gedPhPixSeed, &b_gedPhPixSeed);
    fChain->SetBranchAddress("gedPhweightXS", &gedPhweightXS, &b_gedPhweightXS);
    Notify();
@@ -195,6 +209,8 @@ void CutID::Show(Long64_t entry)
    if (!fChain) return;
    fChain->Show(entry);
 }
+
+
 Int_t CutID::Cut(Long64_t entry)
 {
 // This function may be called from Loop.
@@ -202,4 +218,6 @@ Int_t CutID::Cut(Long64_t entry)
 // returns -1 otherwise.
    return 1;
 }
-#endif // #ifdef CutID_cxx
+
+
+#endif 

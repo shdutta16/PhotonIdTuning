@@ -1,6 +1,7 @@
-#include <stdlib>
+#include <cstdlib>
 #include <TSystem.h>
 
+#include "CutID.C"
 
 void run_ParseEAs(){
   //-----------------Macro Describtion----------------------------------------------------------
@@ -24,7 +25,7 @@ void run_ParseEAs(){
 
 
   ifstream myfile; 
-  myfile.open("/uscms/home/asroy/nobackup/PhotonIdTuning/CMSSW_7_3_5/src/CutBasedPhoID2016/merged/ChEA_trainner/EA.txt");
+  myfile.open("EA.txt");
 
 
   cout<<"------------------------------------------------------------"<<endl;

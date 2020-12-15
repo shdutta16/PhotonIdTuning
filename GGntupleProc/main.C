@@ -1,4 +1,4 @@
-#include "SP16.C"
+#include "Run3.C"
 #include "TROOT.h"
 #include <algorithm>
 
@@ -23,7 +23,7 @@ int main(int argc, const char *argv[]){
   long int nTotEvt = atof(argv[3]);
   long int nPrintEvt = atof(argv[4]);
   double evtWt = atof(argv[5]);
-  SP16 m(argv[1]);
+  Run3 m(argv[1]);
   m.Loop(outfile,nTotEvt,nPrintEvt,evtWt);
   //m.Loop();
 }

@@ -20,6 +20,9 @@
 #include <string.h>
 #include <fstream>
 
+#include "tdrstyle.C"
+
+
 void EtaBranch(){
 
 
@@ -28,23 +31,45 @@ void EtaBranch(){
   gStyle->SetOptStat(0);
 
   
-  TH1F *SieaftE  = new TH1F("SieaftE","Sieie cut only",100,-5,5); 
-  TH1F *ToEaftE  = new TH1F("ToEaftE","HoE cut only",100,-5,5); 
-  TH1F *IsoPaftE = new TH1F("IsoPaftE","IsoP cut only",100,-5,5); 
-  TH1F *IsoCaftE = new TH1F("IsoCaftE","IsoC cut only",100,-5,5); 
-  TH1F *IsoNaftE = new TH1F("IsoNaftE","IsoN cut only",100,-5,5); 
+  TH1F *SieaftE  = new TH1F("SieaftE","Sieie cut only",100,-3,3); 
+  TH1F *ToEaftE  = new TH1F("ToEaftE","HoE cut only",100,-3,3); 
+  TH1F *IsoPaftE = new TH1F("IsoPaftE","IsoP cut only",100,-3,3); 
+  TH1F *IsoCaftE = new TH1F("IsoCaftE","IsoC cut only",100,-3,3); 
+  TH1F *IsoNaftE = new TH1F("IsoNaftE","IsoN cut only",100,-3,3); 
 
-  TH1F *SieaftbE  = new TH1F("SieaftbE","Sieie cut only",100,-5,5); 
-  TH1F *ToEaftbE  = new TH1F("ToEaftbE","HoE cut only",100,-5,5); 
-  TH1F *IsoPaftbE = new TH1F("IsoPaftbE","IsoP cut only",100,-5,5); 
-  TH1F *IsoCaftbE = new TH1F("IsoCaftbE","IsoC cut only",100,-5,5); 
-  TH1F *IsoNaftbE = new TH1F("IsoNaftbE","IsoN cut only",100,-5,5); 
-
-
+  TH1F *SieaftbE  = new TH1F("SieaftbE","Sieie cut only",100,-3,3); 
+  TH1F *ToEaftbE  = new TH1F("ToEaftbE","HoE cut only",100,-3,3); 
+  TH1F *IsoPaftbE = new TH1F("IsoPaftbE","IsoP cut only",100,-3,3); 
+  TH1F *IsoCaftbE = new TH1F("IsoCaftbE","IsoC cut only",100,-3,3); 
+  TH1F *IsoNaftbE = new TH1F("IsoNaftbE","IsoN cut only",100,-3,3); 
 
 
+  TString fname = "Eff1etaB.root";
+  TFile *input = TFile::Open( fname );
+  if (!input || !input->IsOpen()) {
+    cout << "\nERROR! Could not open root file " << fname
+         << endl;
+    exit(0);
+  }
 
   
+  TH1F *EffETA0 = (TH1F*)input->Get("EffETA0");
+  TH1F *EffETAs = (TH1F*)input->Get("EffETAs");
+  TH1F *EffETAt = (TH1F*)input->Get("EffETAt");
+  TH1F *EffETAp = (TH1F*)input->Get("EffETAp");
+  TH1F *EffETAc = (TH1F*)input->Get("EffETAc");
+  TH1F *EffETAn = (TH1F*)input->Get("EffETAn");
+
+
+  TH1F *EffETA0b = (TH1F*)input->Get("EffETA0b");
+  TH1F *EffETAbs = (TH1F*)input->Get("EffETAbs");
+  TH1F *EffETAbt = (TH1F*)input->Get("EffETAbt");
+  TH1F *EffETAbp = (TH1F*)input->Get("EffETAbp");
+  TH1F *EffETAbc = (TH1F*)input->Get("EffETAbc");
+  TH1F *EffETAbn = (TH1F*)input->Get("EffETAbn");
+
+
+
   SieaftE->Divide(EffETAs,EffETA0,1.,1.,"B"); 
   ToEaftE->Divide(EffETAt,EffETA0,1.,1.,"B");
   IsoPaftE->Divide(EffETAp,EffETA0,1.,1.,"B");
@@ -57,8 +82,6 @@ void EtaBranch(){
   IsoPaftbE->Divide(EffETAbp,EffETA0b,1.,1.,"B");
   IsoCaftbE->Divide(EffETAbc,EffETA0b,1.,1.,"B");
   IsoNaftbE->Divide(EffETAbn,EffETA0b,1.,1.,"B");
-
-
 
 
 
@@ -114,9 +137,8 @@ void EtaBranch(){
   IsoNaftE->GetXaxis()->SetTitle("#eta");
   
   c12->SaveAs("BranchOutCutsEtacomb.png");
-
-
-
+  c12->SaveAs("BranchOutCutsEtacomb.root");
+  c12->SaveAs("BranchOutCutsEtacomb.C");
 
 
 

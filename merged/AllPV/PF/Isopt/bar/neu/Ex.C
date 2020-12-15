@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include <TRandom.h>
 #include <TGraph.h>
-#include <vector.h>
+#include <vector>
 #include <new>
 #include "sstream"
 #include <string>
@@ -11,16 +11,26 @@
 //#include <ErrCalc.C>
 
 
+void ErrCalc(TH1F*, int, double, double&, double&, double&);
+
 void Ex(){
 
-  
-  //TFile *f1 = new TFile("/uscms_data/d3/asroy/PhotonIdTuning/CMSSW_7_3_5/src/CutBasedPhoID2016/merged/ChEA_ISOPT/CutTMVABarrel90_HPT.root");
-  TFile *f1 = new TFile("../../CutTMVABarrel90_HPT.root");
+
+  TString f1_name = "../../CutTMVABarrel90_HPT.root";
+  TFile *f1 = new TFile( f1_name );
+  if (!f1 || !f1->IsOpen()) {
+    cout << "\nERROR! Could not open root file " 
+	 << f1_name << endl;
+    exit(0);
+  }
+
   float genPt,ppt,peta,Sie_ie,iso_P,iso_C,iso_N,to_e,weighT;
   int nvtx;
   gStyle->SetOptStat(0);
 
-  //Signal Tree                                                                        
+  //Signal Tree
+  TTree *t_S = (TTree*)f1->Get("t_S");
+                                                                        
   t_S->SetBranchAddress("Sieie",&Sie_ie);
   t_S->SetBranchAddress("isoP",&iso_P);
   t_S->SetBranchAddress("isoC",&iso_C);
@@ -33,7 +43,9 @@ void Ex(){
   t_S->SetBranchAddress("Ppt",&ppt);
   t_S->SetBranchAddress("genPt",&genPt);
 
-  //Background Tree                                                                    
+  //Background Tree                   
+  TTree *t_B = (TTree*)f1->Get("t_B");
+                                                 
   t_B->SetBranchAddress("Sieie",&Sie_ie);
   t_B->SetBranchAddress("isoP",&iso_P);
   t_B->SetBranchAddress("isoC",&iso_C);
@@ -61,7 +73,7 @@ void Ex(){
 
 
 
-  TH2F *his2 = isoPptS->Clone();
+  TH2F *his2 = (TH2F*)isoPptS->Clone();
 
 
 
@@ -85,12 +97,15 @@ void Ex(){
     double errXH = 0; 
     double errXL = 0; 
     
-    r22 = his2->ProjectionY(" ",i,i+1," ");
+    TH1F *r22 = (TH1F*)his2->ProjectionY(" ",i,i+1," ");
     
-    TH1F *h1 = r22->Clone();
+    TH1F *h1 = (TH1F*)r22->Clone();
     ErrCalc(h1,i,0.950,xval,errXL,errXH);
     
-    cout<<"bin :"<<i<<" "<<xval<<"-"<<errXL<<"+ " << errXH<<endl;
+    cout << "bin: " << i << " "
+         << "x-val: " << xval << " "
+         << "-" << errXL << " "
+         << "+" << errXH << endl;
     
     cutV[i-1]   = xval; 
     
@@ -101,16 +116,24 @@ void Ex(){
     bincerL[i-1] = 0;
     bincerH[i-1] = 0;
   }
-  TGraphAsymmErrors * IsoptScaling = new TGraphAsymmErrors(dim,binc,cutV,bincerL,bincerH,errVL,errVH);
-  TGraphAsymmErrors * IsoptScaling2 = new TGraphAsymmErrors(dim,binc,cutV,bincerL,bincerH,errVL,errVH);
-  TGraphAsymmErrors * IsoptScalingLin = new TGraphAsymmErrors(dim,binc,cutV,bincerL,bincerH,errVL,errVH);
+  TGraphAsymmErrors * IsoptScaling = new TGraphAsymmErrors(dim,binc,cutV,
+							   bincerL,bincerH,
+							   errVL,errVH);
+
+  TGraphAsymmErrors * IsoptScaling2 = new TGraphAsymmErrors(dim,binc,cutV,
+							    bincerL,bincerH,
+							    errVL,errVH);
+
+  TGraphAsymmErrors * IsoptScalingLin = new TGraphAsymmErrors(dim,binc,cutV,
+							      bincerL,bincerH,
+							      errVL,errVH);
 
   // double DownL = his2->GetXaxis()->GetBinCenter(1);
-  //double UpperL = his2->GetXaxis()->GetBinCenter(dim);
+  // double UpperL = his2->GetXaxis()->GetBinCenter(dim);
   
-  TF1 *fn1 = new TF1("fn1","exp([0]*x + [1])",20,700);
-  TF1 *fn2 = new TF1("fn2","[1]*x + [2]*x*x + [0]",20,700);
-  TF1 *fnlin = new TF1("fnlin","[1]*x + [0]",20,700);
+  TF1 *fn1 = new TF1("fn1","exp([0]*x + [1])",20,500);
+  TF1 *fn2 = new TF1("fn2","[1]*x + [2]*x*x + [0]",20,500);
+  TF1 *fnlin = new TF1("fnlin","[1]*x + [0]",20,500);
 
   IsoptScaling->Fit("fn1","R");
   IsoptScaling2->Fit("fn2","R");
@@ -129,14 +152,17 @@ void Ex(){
   IsoptScaling->GetXaxis()->SetTitle("Photon Pt GeVc^{-1}");
   IsoptScaling->GetYaxis()->SetTitle("Isolation Contour PF::h0 rho corr.");
   c3->cd(2); 
+  c3->SetRightMargin(0.3);
+  c3->SetLogz();
   his2->Draw("colz");
   his2->GetXaxis()->SetTitle("Photon Pt GeVc^{-1}");
   his2->GetYaxis()->SetTitle("Isolation PF::h0  rho corr.");
 
-  c3->SaveAs("final_800.png");
+  c3->SaveAs("./IsoPt_bar_neu/final_500.png");
+  c3->SaveAs("./IsoPt_bar_neu/final_500.C");
 
-  //lets fit this graph
-  
+
+ 
   TCanvas *c4 = new TCanvas("c4","Iso Pt",1200,600);
   c4->Divide(2,1);
   
@@ -154,7 +180,10 @@ void Ex(){
   IsoptScalingLin->GetXaxis()->SetTitle("Photon Pt GeVc^{-1}");
   IsoptScalingLin->GetYaxis()->SetTitle("Isolation Contour PF::h0 rho corr.");
 
-  c4->SaveAs("POl.png");
+  c4->SaveAs("./IsoPt_bar_neu/POl.png");
+  c4->SaveAs("./IsoPt_bar_neu/POl.C");
+
+
 
   TCanvas *c6 = new TCanvas("c6","Iso Pt",1200,600);
   c6->Divide(2,1);  
@@ -165,13 +194,14 @@ void Ex(){
   IsoptScaling2->GetXaxis()->SetTitle("Photon Pt GeVc^{-1}");
   IsoptScaling2->GetYaxis()->SetTitle("Isolation Contour PF::h0 rho corr.");
   c6->cd(2);
+  c6->SetRightMargin(0.3);
+  c6->SetLogz();
   his2->Draw("colz");
   his2->GetXaxis()->SetTitle("Photon Pt GeVc^{-1}");
   his2->GetYaxis()->SetTitle("Isolation PF::h0  rho corr.");
-  c6->SaveAs("POL2.png");
-  c6->SaveAs("POL2.C");
 
-
+  c6->SaveAs("./IsoPt_bar_neu/POL2.png");
+  c6->SaveAs("./IsoPt_bar_neu/POL2.C");
 
 
 }
@@ -186,9 +216,10 @@ void ErrCalc(TH1F *HIST,int binxn,double perc,double & X_val, double & errXL,dou
   // Naming the output 
   ostringstream gn; 
   gn << binxn; 
-  string gnm = "Efficiency_CutVal"+gn.str()+".png"; 
-  const char *graphname = gnm.c_str();
-  //
+  string gnm_png = "./IsoPt_bar_neu_eff/Efficiency_CutVal"+gn.str()+".png"; 
+  string gnm_C   = "./IsoPt_bar_neu_eff/Efficiency_CutVal"+gn.str()+".C";
+  const char *graphname_png = gnm_png.c_str();
+  const char *graphname_C   = gnm_C.c_str();
 
 
   /*   TEST CODE
@@ -202,10 +233,10 @@ void ErrCalc(TH1F *HIST,int binxn,double perc,double & X_val, double & errXL,dou
   }
   */ 
 
-  TH1F *h1 = HIST->Clone();
+  TH1F *h1 = (TH1F*)HIST->Clone();
   int arsize = h1->GetXaxis()->GetNbins(); 
   
-  if(h1->GetEntries() == 0 ) goto endd; 
+  if(h1->GetEntries() != 0 ){// goto endd; 
 
   double *eff; 
   double *eff_err; 
@@ -276,7 +307,8 @@ void ErrCalc(TH1F *HIST,int binxn,double perc,double & X_val, double & errXL,dou
 
     h1->Draw();
 
-    c1->SaveAs(graphname);
+    c1->SaveAs(graphname_png);
+    c1->SaveAs(graphname_C);
 
     double * err_up; 
     double * err_down; 
@@ -385,8 +417,9 @@ void ErrCalc(TH1F *HIST,int binxn,double perc,double & X_val, double & errXL,dou
 
     delete[] err_up; 
     delete[] err_down; 
+  }
     
- endd:
-    if(h1->GetEntries() == 0)  cout<<"Empty histo"<<endl;
+  //endd:
+  if(h1->GetEntries() == 0)  cout<<"Empty histo"<<endl;
 
 }

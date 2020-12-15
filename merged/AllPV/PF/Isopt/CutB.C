@@ -1,5 +1,5 @@
+#pragma once
 
-//#define CUTID_cxx
 #include <TH2.h>
 #include <TStyle.h>
 #include <TCanvas.h>

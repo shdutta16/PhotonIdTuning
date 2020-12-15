@@ -1,11 +1,14 @@
+#pragma once
+
 #define CutID_cxx
 #include "CutID.h"
 #include <TH1.h>
 #include <TH2.h>
 #include <TStyle.h>
 #include <TCanvas.h>
-#include <AreaCalc.C>
-#include <CutB.C>
+
+#include "AreaCalc.C"
+#include "CutB.C"
 
 
 void CutID::Loop()

@@ -49,7 +49,7 @@ void ReaderT(){
 
   //Declaring the reader  
   TString methodName = "Cut_Tight_r";
-  TString weightfile = "./weights/TMVAClassification_Cut_Tight_r.weights.xml";
+  TString weightfile = "./output_1M200K/dataset/weights/TMVAClassification_Cut_Tight_r.weights.xml";
 
   //TString methodName = "Cut_Medium_r";
   //TString weightfile = "./weights/TMVAClassification_Cut_Medium_r.weights.xml";
@@ -67,8 +67,9 @@ void ReaderT(){
   reader->AddVariable("Sieie",&Sieie);
   //  reader->AddVariable("ToE",&ToE);
   reader->AddVariable( "isoC",&isoC );
-  reader->AddVariable( "(isoN-(0.0143*Ppt+0.000017*Ppt*Ppt) > 0 ) ? isoN-(0.0143*Ppt+0.000017*Ppt*Ppt) : 0.0 ",&isoN);
-  reader->AddVariable( "(isoP-0.0046*Ppt > 0 ) ? isoP-0.0046*Ppt : 0.0 ",&isoP);
+  reader->AddVariable( "(isoN-(0.01556*Ppt-0.000001129*Ppt*Ppt) > 0 ) ? isoN-(0.01556*Ppt-0.000001129*Ppt*Ppt) : 0.0 ",&isoN);
+  reader->AddVariable( "(isoP-0.002544*Ppt > 0 ) ? isoP-0.002544*Ppt : 0.0 ",&isoP);
+  reader->AddVariable( "(ToE > 0.0 ) ? ToE : 0.0 ",&ToE);
 
 
   //reader->AddVariable( "(isoN-(0.014*Ppt+0.000019*Ppt*Ppt) > 0 )? isoN-(0.014*Ppt+0.000019*Ppt*Ppt): 0.0 ",&isoN);
@@ -77,7 +78,7 @@ void ReaderT(){
   
 
   reader->AddSpectator("Ppt",&pt);
-  reader->AddSpectator("ToE",&ToE);
+  //reader->AddSpectator("ToE",&ToE);
   reader->BookMVA(methodName,weightfile); 
 
 
@@ -101,8 +102,8 @@ void ReaderT(){
   
   double SEF =  0.70;   
   if(mcuts)mcuts->GetCuts(SEF, cutsMin, cutsMax ); 
-  myfileT<<" "<<cutsMax[0]<<" "<<cutsMax[1]<<" "<<cutsMax[2]<<" "<<cutsMax[3]<<" "<<endl;  
-  
+  //myfileT<<" "<<cutsMax[0]<<" "<<cutsMax[1]<<" "<<cutsMax[2]<<" "<<cutsMax[3]<<" "<<endl;  
+  myfileT << " " << cutsMax[0] << " " << cutsMax[1] << " " << cutsMax[2] << " " << cutsMax[3] << " " << cutsMax[4] << " " << endl;
 
   delete reader;
 

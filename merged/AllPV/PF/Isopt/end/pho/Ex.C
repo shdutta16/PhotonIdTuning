@@ -14,8 +14,12 @@
 void Ex(){
 
   
-  //TFile *f1 = new TFile("/uscms_data/d3/asroy/PhotonIdTuning/CMSSW_7_3_5/src/CutBasedPhoID2016/merged/ChEA_ISOPT/CutTMVAEndCap90_HPT.root");
   TFile *f1 = new TFile("../../CutTMVAEndCap90_HPT.root");
+  if (!f1 || !f1->IsOpen()) {
+    cout << "\nERROR! Could not open root file" << endl;
+    exit(0);
+  }
+
   float genPt,ppt,peta,Sie_ie,iso_P,iso_C,iso_N,to_e,weighT;
   int nvtx;
   gStyle->SetOptStat(0);

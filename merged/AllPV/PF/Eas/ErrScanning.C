@@ -13,7 +13,7 @@
 #include <iostream>
 
 
-
+void ErrCalc(TH1F*, int, double, double&, double&, double&);
 
 void ErrScanning(int bin,double minEta,double maxEta,double & in,double & ein,double & ip,double & eip,double  & ic,double  & eic){
 
@@ -26,12 +26,14 @@ void ErrScanning(int bin,double minEta,double maxEta,double & in,double & ein,do
 
 
   
-  TFile *f1 = new TFile("../../sp15_25ns.root");
+  TFile *f1 = new TFile("/eos/cms/store/group/phys_egamma/shdutta/PhotonIdTuning/Output/ntuple_combined_GJet_DoubleEMEnriched_MGG_Run3Summer19_2021.root");
   float rho,ppt,peta,Sie_ie,iso_P,iso_C,iso_N,to_e;
   int nvtx,isprmt;
   gStyle->SetOptStat(0);
 
-  //Signal Tree                                                                        
+  //Signal Tree                                                             
+  TTree *t1 = (TTree*)f1->Get("t1");
+           
   t1->SetBranchAddress("gedPhPt",&ppt);
   t1->SetBranchAddress("gedPhEta",&peta);
   t1->SetBranchAddress("gedNeuIso",&iso_N);
@@ -68,9 +70,9 @@ void ErrScanning(int bin,double minEta,double maxEta,double & in,double & ein,do
   }
 
   cout<<"Builded the 2d HISTOGRAM"<<endl;
-  TH2F *hisN = isoNrho->Clone();
-  TH2F *hisP = isoPrho->Clone();
-  TH2F *hisC = isoCrho->Clone();
+  TH2F *hisN = (TH2F*)isoNrho->Clone();
+  TH2F *hisP = (TH2F*)isoPrho->Clone();
+  TH2F *hisC = (TH2F*)isoCrho->Clone();
   int dim = hisN->GetXaxis()->GetNbins(); 
 
   cout<<"ENTRIS PER HISTO GAM TON HISTO TOU"<<endl;
@@ -133,8 +135,8 @@ void ErrScanning(int bin,double minEta,double maxEta,double & in,double & ein,do
     double errXH = 0; 
     double errXL = 0; 
     
-    r21 = hisN->ProjectionY(" ",i,i+1," ");
-    TH1F *h1 = r21->Clone();
+    TH1D *r21 = hisN->ProjectionY(" ",i,i+1," ");
+    TH1F *h1 = (TH1F*)r21->Clone();
 
     if(bin != 7  && ( i  < 30 ) && h1->GetEntries() > 0 ) ErrCalc(h1,i,0.90,xval,errXL,errXH);
     if(bin == 7 && ( i > 5 ) && ( i  < 25 ) && h1->GetEntries() > 0 ) ErrCalc(h1,i,0.90,xval,errXL,errXH);
@@ -151,8 +153,8 @@ void ErrScanning(int bin,double minEta,double maxEta,double & in,double & ein,do
     errXL = 0; 
     
 
-    r22 = hisP->ProjectionY(" ",i,i+1," ");
-    TH1F *h2 = r22->Clone();
+    TH1D *r22 = hisP->ProjectionY(" ",i,i+1," ");
+    TH1F *h2 = (TH1F*)r22->Clone();
     if(bin != 7 && i < 30 && h2->GetEntries() > 0) ErrCalc(h2,i,0.90,xval,errXL,errXH);
     if(bin == 7 && i > 5 && i < 25 && h2->GetEntries() > 0) ErrCalc(h2,i,0.90,xval,errXL,errXH);
     cout<<"bin :"<<i<<" "<<xval<<"-"<<errXL<<"+ " << errXH<<endl;
@@ -167,8 +169,8 @@ void ErrScanning(int bin,double minEta,double maxEta,double & in,double & ein,do
     errXH = 0; 
     errXL = 0; 
     
-    r23 = hisC->ProjectionY(" ",i,i+1," ");
-    TH1F *h3 = r23->Clone();
+    TH1D *r23 = hisC->ProjectionY(" ",i,i+1," ");
+    TH1F *h3 = (TH1F*)r23->Clone();
     if( bin != 7 && i < 30 && h3->GetEntries() > 0)ErrCalc(h3,i,0.90,xval,errXL,errXH);
     if( bin == 7 &&  i > 5 && i < 25 && h3->GetEntries() > 0)ErrCalc(h3,i,0.90,xval,errXL,errXH);
     cout<<"bin :"<<i<<" "<<xval<<"-"<<errXL<<"+ " << errXH<<endl;
@@ -270,7 +272,7 @@ void ErrScanning(int bin,double minEta,double maxEta,double & in,double & ein,do
 }
 
 
-
+/*
 void ErrCalc(TH1F *HIST,int binxn,double perc,double & X_val, double & errXL,double & errXH){
   
   // Naming the output 
@@ -282,7 +284,7 @@ void ErrCalc(TH1F *HIST,int binxn,double perc,double & X_val, double & errXL,dou
 
   cout<<binxn<<endl;
 
-  TH1F *h1 = HIST->Clone();
+  TH1F *h1 = (TH1F*)HIST->Clone();
   int arsize = h1->GetXaxis()->GetNbins(); 
   
   //  if(h1->GetEntries() == 0 ) goto endd; 
@@ -504,3 +506,4 @@ void ErrCalc(TH1F *HIST,int binxn,double perc,double & X_val, double & errXL,dou
     // if(h1->GetEntries() == 0)  cout<<"Empty histo"<<endl;
 
 }
+*/

@@ -3,6 +3,7 @@
 #include "TableWriter.C"
 #include "ErrScanning.C"
 #include "ContourBuilder.C"
+
 /*
 #include <cstdlib>
 #include <TSystem.h>
@@ -39,12 +40,12 @@ void runCont(){
   Fin[0][0] = ic;
   Fin[0][1] = in;
   Fin[0][2] = ip;
-
   FinEr[0][0] = eic;
   FinEr[0][1] = ein;
   FinEr[0][2] = eip;
 
-  emin =1; 
+  
+  emin =1.0; 
   emax =1.479;
   ContourBuilder(2,emin,emax,in,ein,ip,eip,ic,eic);
   Fin[1][0] = ic;
@@ -111,7 +112,7 @@ void runCont(){
   FinEr[6][0] = eic;
   FinEr[6][1] = ein;
   FinEr[6][2] = eip;
-
+  
 
   for(int j  = 0; j < 4; j++)cout<<endl;
   cout<<"Derived the Effective areas --- "<<endl;
@@ -130,6 +131,6 @@ void runCont(){
   
   cout<<"----------------------------------------------------"<<endl;
 
-
+  
 
 }

@@ -5,14 +5,19 @@
 void Scr99(){
 
 
-  TFile *f1 = new TFile("/uscms_data/d3/asroy/PhotonIdTuning/CMSSW_7_3_5/src/CutBasedPhoID2016/merged/ChEA_trainner/CutTMVABarrel90.root");
-  //TFile *f1 = new TFile("../../CutTMVABarrel90.root");
+  TFile *f1 = new TFile("../CutTMVABarrel90_test.root");
+  if (!f1 || !f1->IsOpen()) {
+    cout << "\nERROR! Could not open root file" << endl;
+    exit(0);
+  }
 
 
   float ToE,Sie,IsoP,IsoC,IsoN,weighT,Ppt; 
 
   ofstream myfile; 
   myfile.open("99per.txt");
+
+  TTree *t_S = (TTree*)f1->Get("t_S");
 
   t_S->SetBranchAddress("Ppt",&Ppt);
   t_S->SetBranchAddress("ToE",&ToE);
@@ -60,8 +65,8 @@ void Scr99(){
     HH->Fill(ToE,weighT);
     HS->Fill(Sie,weighT);
     
-    double isoph = TMath::Max(IsoP - 0.0046*Ppt,0.0);
-    double isoneu = TMath::Max(IsoN - (0.0143*Ppt+0.000017*Ppt*Ppt),0.0);
+    double isoph = TMath::Max(IsoP - 0.002544*Ppt,0.0);
+    double isoneu = TMath::Max(IsoN - (0.01556*Ppt-0.000001129*Ppt*Ppt),0.0);
 
     //double isoph = TMath::Max(IsoP - 0.0053*Ppt,0.0);
     //double isoneu = TMath::Max(IsoN - (0.014*Ppt+0.000019*Ppt*Ppt),0.0);
@@ -136,7 +141,7 @@ void Scr99(){
   
      p1 = 1;
      xcsf = xcs; 
- 
+     cout << "xcsf =" << xcsf << endl;
    }
 
   bin = HH->FindBin(xch);
@@ -145,6 +150,7 @@ void Scr99(){
  
     xchf = xch; 
     p2 =1;
+    cout << "xchf =" << xchf << endl;
   }
    bin = HP->FindBin(xcp);
    // cout<<1.0*HP->Integral(1,i)/totS<<endl;
@@ -153,12 +159,14 @@ void Scr99(){
   
      xcpf = xcp; 
      p3 = 1; 
+     cout << "xcpf =" << xcpf << endl;
    }
   bin = HC->FindBin(xcc);
   if(1.0*HC->Integral(1,i)/totS > 0.9999 && p4 == 0){
 
     xccf = xcc; 
     p4 = 1; 
+    cout << "xccf =" << xccf << endl;
   }
   bin = HN->FindBin(xcn);
   //  cout<<1.0*HN->Integral(1,i)/totS<<" "<<p5<<endl;
@@ -166,14 +174,15 @@ void Scr99(){
 
     p5 = 1;
     xcnf = xcn; 
+    cout << "xcnf =" << xcnf << endl;
   }
   }
   
   myfile<<xcsf<<endl;
-  myfile<<xchf<<endl;
   myfile<<xccf<<endl;
   myfile<<xcnf<<endl;
   myfile<<xcpf<<endl;
+  myfile<<xchf<<endl;
 
   myfile.close();
   /*
@@ -191,7 +200,7 @@ void Scr99(){
   cout<<"IsoC :"<<xccf<<endl;
   cout<<"IsoN :"<<xcnf<<endl;
   */
-  TFile *f1 = new TFile("Vars.root","recreate");
+  TFile *f2 = new TFile("Vars.root","recreate");
   HS->Write();
   HH->Write();
   HP->Write();

@@ -1,0 +1,4 @@
+SCRAM fatal: Unable to locate the top of local release. Please run this command from a SCRAM-based area.
+Error in <TFile::TFile>: file ../CutTMVABarrel90_test.root does not exist
+cp: cannot stat ‘weights/*.xml’: No such file or directory
+cp: cannot stat ‘weights/*.C’: No such file or directory

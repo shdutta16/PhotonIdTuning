@@ -1,0 +1,26 @@
+universe = vanilla
+
+Executable = exec.sh
+
+output               = $(Cluster)_$(Process)_job.out 
+error                = $(Cluster)_$(Process)_job.err
+Log                  = $(Cluster)_$(Process)_job.log
+
+#Notification         = never
+#WhenToTransferOutput = On_Exit
+#ShouldTransferFiles  = yes
+
+should_transfer_files = yes
+on_exit_remove       = (ExitBySignal == FALSE && (ExitCode == 0 || ExitCode == 42 || NumJobStarts>3))
+
++IsFastQueueJob      = True
+
+getenv               = True
+request_memory       = 30720
+request_disk         = 2048000
+
+Transfer_Input_Files = Run3.exe
+
++AccountingGroup = "group_u_CMS.u_zh.priority"
+
+Queue

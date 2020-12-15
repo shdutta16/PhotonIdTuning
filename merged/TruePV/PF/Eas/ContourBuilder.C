@@ -26,7 +26,7 @@ void ContourBuilder(int bin,double minEta,double maxEta,double & in,double & ein
 
 
   
-  TFile *f1 = new TFile("../../../spring16_gjets_25ns.root");
+  TFile *f1 = new TFile("/eos/cms/store/group/phys_egamma/shdutta/PhotonIdTuning/Output/ntuple_combined_GJet_DoubleEMEnriched_MGG_Run3Summer19_2021.root");
   //TFile *f1 = new TFile("/uscms_data/d3/asroy/PhotonIdTuning/CMSSW_7_3_5/src/CutBasedPhoID2016/merged/spring16_gjets_25ns.root");
   float vtx,vty,vtz,mcvtx,mcvty,mcvtz,rho,ppt,peta,Sie_ie,iso_P,iso_C,iso_N,to_e;//
   int nvtx,isprmt;

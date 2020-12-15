@@ -13,6 +13,23 @@
 #include <iostream>
 
 
+void ErrCalc(TH1F*, int, double, double&, double&, double&);
+
+string toString( double num )
+{
+
+  ostringstream ss_num;
+  ss_num << num;
+  
+  if( ss_num.str().find(".") == string::npos )
+    {
+      ss_num.str(std::string());
+      ss_num << std::fixed << std::setprecision(1) << num;
+    }
+  
+  return ss_num.str();
+
+}
 
 
 void ContourBuilder(int bin,double minEta,double maxEta,double & in,double & ein,double & ip,double & eip,double  & ic,double  & eic){
@@ -21,18 +38,45 @@ void ContourBuilder(int bin,double minEta,double maxEta,double & in,double & ein
   fword << bin;
   string b_name = fword.str();
   string Pngg = "Iso_vsRho"+b_name+".png";
+  string Cg   = "Iso_vsRho"+b_name+".C";
   char const *PNGName = Pngg.c_str();
+  char const *CName   = Cg.c_str();
 
 
+  string s_etaMin = toString(minEta);
+  string s_etaMax = toString(maxEta);
+
+  cout << s_etaMin << endl;
+  cout << s_etaMax << endl;
+
+  s_etaMin.replace(s_etaMin.find("."), 1, "p");
+  s_etaMax.replace(s_etaMax.find("."), 1, "p");
+  
+
+  string fn_hisN_png = "Neutral_IsoVsRho_bin"+ b_name +"_"+ s_etaMin +"_"+ s_etaMax+".png";
+  string fn_hisP_png = "Photon_IsoVsRho_bin"+ b_name +"_"+ s_etaMin +"_"+ s_etaMax+".png";
+  string fn_hisC_png = "Charged_IsoVsRho_bin"+ b_name +"_"+ s_etaMin +"_"+ s_etaMax+".png";
+
+  string fn_hisN_C = "Neutral_IsoVsRho_bin"+ b_name +"_"+ s_etaMin +"_"+ s_etaMax+".C";
+  string fn_hisP_C = "Photon_IsoVsRho_bin"+ b_name +"_"+ s_etaMin +"_"+ s_etaMax+".C";
+  string fn_hisC_C = "Charged_IsoVsRho_bin"+ b_name +"_"+ s_etaMin +"_"+ s_etaMax+".C";
 
   
   //  TFile *f1 = new TFile("../spring16_gjets_25ns.root");
-  TFile *f1 = new TFile("/uscms_data/d3/asroy/PhotonIdTuning/CMSSW_7_3_5/src/CutBasedPhoID2016/merged/spring16_gjets_25ns.root");
+  TFile *f1 = new TFile("/eos/cms/store/group/phys_egamma/shdutta/PhotonIdTuning/Output/ntuple_combined_GJet_DoubleEMEnriched_MGG_Run3Summer19_2021.root");
+  if (!f1 || !f1->IsOpen()) {
+    cout << "\nERROR! Could not open root file" << endl;
+    exit(0);
+  }
+
+
   float rho,ppt,peta,Sie_ie,iso_P,iso_C,iso_N,to_e;
   int nvtx,isprmt;
   gStyle->SetOptStat(0);
 
-  //Signal Tree                                                                        
+  //Signal Tree                                                                
+  TTree *t1 = (TTree*)f1->Get("t1");
+      
   t1->SetBranchAddress("gedPhPt",&ppt);
   t1->SetBranchAddress("gedPhEta",&peta);
   t1->SetBranchAddress("gedNeuIso",&iso_N);
@@ -44,9 +88,9 @@ void ContourBuilder(int bin,double minEta,double maxEta,double & in,double & ein
 
 
 
-  TH2F *isoNrho = new TH2F("isoNrho","Iso neutral hadrons vs #rho",30,0,30,2000,0,200);
-  TH2F *isoPrho = new TH2F("isoPrho","Iso Photon vs #rho",30,0,30,2000,0,200);
-  TH2F *isoCrho = new TH2F("isoCrho","Iso Charge hadrons vs #rho",30,0,30,2000,0,200);
+  TH2F *isoNrho = new TH2F("isoNrho","Iso neutral hadrons vs #rho",100,0,100,2000,0,200);
+  TH2F *isoPrho = new TH2F("isoPrho","Iso Photon vs #rho",100,0,100,2000,0,200);
+  TH2F *isoCrho = new TH2F("isoCrho","Iso Charge hadrons vs #rho",100,0,100,2000,0,200);
 
 
   for(int i  = 0; i < t1->GetEntries();i++){
@@ -69,9 +113,9 @@ void ContourBuilder(int bin,double minEta,double maxEta,double & in,double & ein
   }
 
   cout<<"Builded the 2d HISTOGRAM"<<endl;
-  TH2F *hisN = isoNrho->Clone();
-  TH2F *hisP = isoPrho->Clone();
-  TH2F *hisC = isoCrho->Clone();
+  TH2F *hisN = (TH2F*)isoNrho->Clone();
+  TH2F *hisP = (TH2F*)isoPrho->Clone();
+  TH2F *hisC = (TH2F*)isoCrho->Clone();
   int dim = hisN->GetXaxis()->GetNbins(); 
 
   cout<<"ENTRIS PER HISTO GAM TON HISTO TOU"<<endl;
@@ -79,8 +123,41 @@ void ContourBuilder(int bin,double minEta,double maxEta,double & in,double & ein
   cout<<hisP->GetEntries()<<endl;
   cout<<hisC->GetEntries()<<endl;
 
+  
+  TCanvas *c4 = new TCanvas("c4","Neutral Iso-rho 2D Histogram",1000,800);
+  gPad->SetRightMargin(0.2);
+  c4->SetLogy();
+  c4->SetLogz();
+  hisN->GetXaxis()->SetTitle("#rho");
+  hisN->GetYaxis()->SetTitle("Iso");
+  hisN->Draw("COLZ");
+  c4->SaveAs(fn_hisN_png.c_str());
+  c4->SaveAs(fn_hisN_C.c_str());
 
 
+  TCanvas *c5 =new TCanvas("c5","Photon Iso-rho 2D Histogram",1000,800);
+  gPad->SetRightMargin(0.2);
+  c5->SetLogy();
+  c5->SetLogz();
+  hisP->GetXaxis()->SetTitle("#rho");
+  hisP->GetYaxis()->SetTitle("Iso");
+  hisP->Draw("COLZ");
+  c5->SaveAs(fn_hisP_png.c_str());
+  c5->SaveAs(fn_hisP_C.c_str());
+
+
+  TCanvas *c6 =new TCanvas("c6","Charged Iso-rho 2D Histogram",1000,800);
+  gPad->SetRightMargin(0.2);
+  c6->SetLogy();
+  c6->SetLogz();
+  hisC->GetXaxis()->SetTitle("#rho");
+  hisC->GetYaxis()->SetTitle("Iso");
+  hisC->Draw("COLZ");
+  c6->SaveAs(fn_hisC_png.c_str());
+  c6->SaveAs(fn_hisC_C.c_str());
+
+  
+  cout << "2D HISTOGRAMS SAVED AS PNG" << endl;
 
   double * cutVn; 
   double * errVHn; 
@@ -134,8 +211,8 @@ void ContourBuilder(int bin,double minEta,double maxEta,double & in,double & ein
     double errXH = 0; 
     double errXL = 0; 
     
-    r21 = hisN->ProjectionY(" ",i,i+1," ");
-    TH1F *h1 = r21->Clone();
+    TH1D *r21 = hisN->ProjectionY(" ",i,i+1," ");
+    TH1F *h1 = (TH1F*)r21->Clone();
 
     if(h1->GetEntries() > 10000 ) ErrCalc(h1,i,0.90,xval,errXL,errXH);
     cout<<"bin :"<<i<<" "<<xval<<"- "<<errXL<<"+ " << errXH<<endl;
@@ -151,8 +228,8 @@ void ContourBuilder(int bin,double minEta,double maxEta,double & in,double & ein
     errXL = 0; 
     
 
-    r22 = hisP->ProjectionY(" ",i,i+1," ");
-    TH1F *h2 = r22->Clone();
+    TH1D *r22 = hisP->ProjectionY(" ",i,i+1," ");
+    TH1F *h2 = (TH1F*)r22->Clone();
     if( h2->GetEntries() > 0) ErrCalc(h2,i,0.90,xval,errXL,errXH);
    
     cout<<"bin :"<<i<<" "<<xval<<"-"<<errXL<<"+ " << errXH<<endl;
@@ -167,8 +244,8 @@ void ContourBuilder(int bin,double minEta,double maxEta,double & in,double & ein
     errXH = 0; 
     errXL = 0; 
     
-    r23 = hisC->ProjectionY(" ",i,i+1," ");
-    TH1F *h3 = r23->Clone();
+    TH1D *r23 = hisC->ProjectionY(" ",i,i+1," ");
+    TH1F *h3 = (TH1F*)r23->Clone();
     if(  h3->GetEntries() > 0)ErrCalc(h3,i,0.90,xval,errXL,errXH);
     cout<<"bin :"<<i<<" "<<xval<<"-"<<errXL<<"+ " << errXH<<endl;
     cutVc[i-1]   = xval; 
@@ -179,16 +256,39 @@ void ContourBuilder(int bin,double minEta,double maxEta,double & in,double & ein
     bincerHc[i-1] = 0.0;
 
   }
-  
+
+
+  //cout << "\nPhoton:" << endl;
+  for( int i=1; i<=dim; i++ )
+    {
+
+      /*
+      cout << bincp[i-1] << "\t" 
+	   << cutVp[i-1] << "\t"
+	   << bincerLp[i-1] << "\t"
+	   << bincerHp[i-1] << "\t"
+	   << errVLp[i-1] << "\t"
+	   << errVHp[i-1] << endl;
+      */
+      if( errVHc[i-1] > 10.0 )
+	errVHc[i-1] = 0.0;
+
+      if( errVHn[i-1] >10.0 )
+	errVHn[i-1] = 0.0;
+
+      if( errVHp[i-1] >10.0 )
+	errVHp[i-1] = 0.0;
+
+    }
 
 
   TGraphAsymmErrors * IsoNvsrho = new TGraphAsymmErrors(dim,bincn,cutVn,bincerLn,bincerHn,errVLn,errVHn);
   TGraphAsymmErrors * IsoPvsrho = new TGraphAsymmErrors(dim,bincp,cutVp,bincerLp,bincerHp,errVLp,errVHp);
   TGraphAsymmErrors * IsoCvsrho = new TGraphAsymmErrors(dim,bincc,cutVc,bincerLc,bincerHc,errVLc,errVHc);
   
-  TF1 *fnn = new TF1("fnn","[0]*x + [1]",5,20);
-  TF1 *fnp = new TF1("fnp","[0]*x + [1]",5,20);
-  TF1 *fnc = new TF1("fnc","[0]*x + [1]",5,20);
+  TF1 *fnn = new TF1("fnn","[0]*x + [1]",20,70);
+  TF1 *fnp = new TF1("fnp","[0]*x + [1]",20,80);
+  TF1 *fnc = new TF1("fnc","[0]*x + [1]",20,80);
 
 
   IsoNvsrho->Fit("fnn","R");
@@ -207,6 +307,8 @@ void ContourBuilder(int bin,double minEta,double maxEta,double & in,double & ein
   TCanvas *c3 = new TCanvas("c3","Iso vs Pt",1200,400);
   c3->Divide(3,1);
   c3->cd(1);
+  gStyle->SetStatX(0.95);
+  gStyle->SetStatY(0.2);
   IsoNvsrho->SetMarkerStyle(24); 
   IsoNvsrho->SetMarkerSize(0.4);
   IsoNvsrho->Draw("AP");
@@ -214,6 +316,8 @@ void ContourBuilder(int bin,double minEta,double maxEta,double & in,double & ein
   IsoNvsrho->GetYaxis()->SetTitle("Neutral Isolation 95% Contour ");
 
   c3->cd(2); 
+  gStyle->SetStatX(0.95);
+  gStyle->SetStatY(0.2);
   IsoPvsrho->SetMarkerStyle(24); 
   IsoPvsrho->SetMarkerSize(0.4);
   IsoPvsrho->Draw("AP");
@@ -221,6 +325,8 @@ void ContourBuilder(int bin,double minEta,double maxEta,double & in,double & ein
   IsoPvsrho->GetYaxis()->SetTitle("Photon Isolation 95% Contour ");
   
   c3->cd(3); 
+  gStyle->SetStatX(0.95);
+  gStyle->SetStatY(0.2);
   IsoCvsrho->SetMarkerStyle(24); 
   IsoCvsrho->SetMarkerSize(0.4);
   IsoCvsrho->Draw("AP");
@@ -228,6 +334,7 @@ void ContourBuilder(int bin,double minEta,double maxEta,double & in,double & ein
   IsoCvsrho->GetYaxis()->SetTitle("Charge Isolation 95% Contour ");
   
   c3->SaveAs(PNGName);
+  c3->SaveAs(CName);
 
 
 }
@@ -239,7 +346,7 @@ void ErrCalc(TH1F *HIST,int binxn,double perc,double & X_val, double & errXL,dou
 
   cout<<binxn<<endl;
 
-  TH1F *h1 = HIST->Clone();
+  TH1F *h1 = (TH1F*)HIST->Clone();
   int arsize = h1->GetXaxis()->GetNbins(); 
   
   double *eff; 
@@ -429,3 +536,4 @@ void ErrCalc(TH1F *HIST,int binxn,double perc,double & X_val, double & errXL,dou
     // if(h1->GetEntries() == 0)  cout<<"Empty histo"<<endl;
 
 }
+

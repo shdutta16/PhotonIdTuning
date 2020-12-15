@@ -20,20 +20,53 @@
 #include <string.h>
 #include <fstream>
 
+#include "tdrstyle.C"
+
+
 void EfPT_higherValues(){
 
 
   double IsoPcutL,IsoCcutL,IsoNcutL,SieiecutL,HoEcutL;
+  double IsoPcutM,IsoCcutM,IsoNcutM,SieiecutM,HoEcutM;
+  double IsoPcutT,IsoCcutT,IsoNcutT,SieiecutT,HoEcutT;
+
+  ifstream tight;
+  ifstream medium;
+  ifstream loose;
+
+
+  TString tight_name = "TightR.txt";
+  TString medium_name = "MediumR.txt";
+  TString loose_name = "LooseR.txt";
+
+  tight.open(tight_name);
+  if( !tight || !tight.is_open() ){
+    cout << "\nERROR! Could not open txt file "
+         << tight_name << endl;
+    exit(0);
+  }
+
+  medium.open(medium_name);
+  if( !medium || !medium.is_open() ){
+    cout << "\nERROR! Could not open txt file "
+         << medium_name << endl;
+    exit(0);
+  }
+
+  loose.open(loose_name);
+  if( !loose || !loose.is_open() ){
+    cout << "\nERROR! Could not open txt file "
+         << loose_name << endl;
+    exit(0);
+  }
 
 
 
-  ifstream loose; 
-  loose.open("LooseR.txt");
 
   if(loose.is_open()){
     while(!loose.eof()){
-      
-      loose>>SieiecutL>>HoEcutL>>IsoCcutL>>IsoNcutL>>IsoPcutL;
+
+      loose>>SieiecutL>>IsoCcutL>>IsoNcutL>>IsoPcutL>>HoEcutL;
       break;
 
     }
@@ -41,50 +74,50 @@ void EfPT_higherValues(){
 
 
 
-  Double_t  bin_lows[107] ={0};                                                                                
-                                                                                                               
-  for(int i =0; i < 107; i++){                                                                                 
-                                                                                                               
-    if(i <= 100 ){                                                                                             
-      bin_lows[i] = i*2.0;                                                                                     
-      cout<<i<<"  " <<i*2<<endl;                                                                               
-    }                                                                                                          
-                                                                                                               
-    if(i > 100 ){                                                                                              
-      bin_lows[i] = (i - 100.0  + 1)*100.0 + 100.0;                                                            
-                                                                                                               
-      cout<<i <<"  "<<(i - 100.0 + 1 )*100.0 + 100.0<<endl;                                                    
-                                                                                                               
-    }                                                                                                          
-  }                                                                                                            
-                                        
+  if(medium.is_open()){
+    while(!medium.eof()){
+
+      medium>>SieiecutM>>IsoCcutM>>IsoNcutM>>IsoPcutM>>HoEcutM;
+      break;
+
+    }
+  }
+
+
+  if(tight.is_open()){
+    while(!tight.eof()){
+      
+      tight>>SieiecutT>>IsoCcutT>>IsoNcutT>>IsoPcutT>>HoEcutT;
+      break;
+
+    }
+  }
 
 
 
-  double IsoPcutM = 5.6;
-  double IsoPcutT = 4.4;
-  
-  double IsoCcutM = 3.2;
-  double IsoCcutT = 2.8;
-  
-  double IsoNcutM = 4;
-  double IsoNcutT = 3.2;
+  Double_t  bin_lows[107] ={0};
 
-   //donne siesie
-  
-  double SieiecutM = 0.00988;
-  double SieiecutT = 0.00967;
+  for(int i; i < 107; i++){ 
+    
+    if(i <= 100 ){
+      bin_lows[i] = i*2.0;
+      cout<<i<<"  " <<i*2<<endl;
+    }
+     
+    if(i > 100 ){
+      bin_lows[i] = (i - 100.0  + 1)*100.0 + 100.0;
+      cout<<i <<"  "<<(i - 100.0 + 1 )*100.0 + 100.0<<endl;
+    }
+  }
 
-  double HoEcutM = 0.063;
-  double HoEcutT = 0.021;
 
   gROOT->ProcessLine(" .L tdrstyle.C");
   setTDRStyle();
   gStyle->SetOptStat(0);
 
-  TH1F *Letas = new TH1F("Letas","Loose Cut Efficiency Eta",100,0,5);
-  TH1F *Metas = new TH1F("Metas","Medium Cut Efficiency Eta",100,0,5);
-  TH1F *Tetas = new TH1F("Tetas","Tight Cut Efficiency Eta",100,0,5); 
+  TH1F *Letas = new TH1F("Letas","Loose Cut Efficiency Eta",100,-3,3);
+  TH1F *Metas = new TH1F("Metas","Medium Cut Efficiency Eta",100,-3,3);
+  TH1F *Tetas = new TH1F("Tetas","Tight Cut Efficiency Eta",100,-3,3); 
 
   TH1F *Lpts = new TH1F("Lpts","Loose Cut Efficiency pt",105,bin_lows);
   TH1F *Mpts = new TH1F("Mpts","Medium Cut Efficiency pt",105,bin_lows);
@@ -95,9 +128,9 @@ void EfPT_higherValues(){
   TH1F *Tnvtxs = new TH1F("Tnvtxs","Tight Cut Efficiency vertices",100,0,100); 
 
 
-  TH1F *Letab = new TH1F("Letab","Loose Cut b Efficiency Eta",100,0,5);
-  TH1F *Metab = new TH1F("Metab","Medium Cut b Efficiency Eta",100,0,5);
-  TH1F *Tetab = new TH1F("Tetab","Tight Cut b Efficiency Eta",100,0,5); 
+  TH1F *Letab = new TH1F("Letab","Loose Cut b Efficiency Eta",100,-3,3);
+  TH1F *Metab = new TH1F("Metab","Medium Cut b Efficiency Eta",100,-3,3);
+  TH1F *Tetab = new TH1F("Tetab","Tight Cut b Efficiency Eta",100,-3,3); 
 
 
   TH1F *Lptb = new TH1F("Lptb","Loose Cut b Efficiency pt",105,bin_lows);
@@ -119,6 +152,56 @@ void EfPT_higherValues(){
 
 
 
+  TString fname = "Eff.root";
+  TFile *input = TFile::Open( fname );
+  if (!input || !input->IsOpen()) {
+    cout << "\nERROR! Could not open root file " << fname
+         << endl;
+    exit(0);
+  }
+
+
+  TH1F *EffETA0 = (TH1F*)input->Get("EffETA0");
+  TH1F *EffETAL = (TH1F*)input->Get("EffETAL");
+  TH1F *EffETAM = (TH1F*)input->Get("EffETAM");
+  TH1F *EffETAT = (TH1F*)input->Get("EffETAT");
+
+  TH1F *EffETA0b = (TH1F*)input->Get("EffETA0b");
+  TH1F *EffETALb = (TH1F*)input->Get("EffETALb");
+  TH1F *EffETAMb = (TH1F*)input->Get("EffETAMb");
+  TH1F *EffETATb = (TH1F*)input->Get("EffETATb");
+
+
+
+  TH1F *EffPT0 = (TH1F*)input->Get("EffPT0");
+  TH1F *EffPTL = (TH1F*)input->Get("EffPTL");
+  TH1F *EffPTM = (TH1F*)input->Get("EffPTM");
+  TH1F *EffPTT = (TH1F*)input->Get("EffPTT");
+
+  TH1F *EffPT0b = (TH1F*)input->Get("EffPT0b");
+  TH1F *EffPTLb = (TH1F*)input->Get("EffPTLb");
+  TH1F *EffPTMb = (TH1F*)input->Get("EffPTMb");
+  TH1F *EffPTTb = (TH1F*)input->Get("EffPTTb");
+
+
+
+  TH1F *EffNVTX0 = (TH1F*)input->Get("EffNVTX0");
+  TH1F *EffNVTXL = (TH1F*)input->Get("EffNVTXL");
+  TH1F *EffNVTXM = (TH1F*)input->Get("EffNVTXM");
+  TH1F *EffNVTXT = (TH1F*)input->Get("EffNVTXT");
+
+  TH1F *EffNVTX0b = (TH1F*)input->Get("EffNVTX0b");
+  TH1F *EffNVTXLb = (TH1F*)input->Get("EffNVTXLb");
+  TH1F *EffNVTXMb = (TH1F*)input->Get("EffNVTXMb");
+  TH1F *EffNVTXTb = (TH1F*)input->Get("EffNVTXTb");
+
+
+
+  TH1F *EffPTs = (TH1F*)input->Get("EffPTs");
+  TH1F *EffPTt = (TH1F*)input->Get("EffPTt");
+  TH1F *EffPTp = (TH1F*)input->Get("EffPTp");
+  TH1F *EffPTc = (TH1F*)input->Get("EffPTc");
+  TH1F *EffPTn = (TH1F*)input->Get("EffPTn");
 
 
 
@@ -126,44 +209,39 @@ void EfPT_higherValues(){
   Metas->Divide(EffETAM,EffETA0,1.,1.,"B");
   Tetas->Divide(EffETAT,EffETA0,1.,1.,"B");
 
+  Letab->Divide(EffETALb,EffETA0b,1.,1.,"B");
+  Metab->Divide(EffETAMb,EffETA0b,1.,1.,"B");
+  Tetab->Divide(EffETATb,EffETA0b,1.,1.,"B");
   
-  Letab->Divide(BckETAL,BckETA0,1.,1.,"B");
-  Metab->Divide(BckETAM,BckETA0,1.,1.,"B");
-  Tetab->Divide(BckETAT,BckETA0,1.,1.,"B");
-
   
 
   Lpts->Divide(EffPTL,EffPT0,1.,1.,"B");
   Mpts->Divide(EffPTM,EffPT0,1.,1.,"B");
   Tpts->Divide(EffPTT,EffPT0,1.,1.,"B");
-
   
-  Lptb->Divide(BckPTL,BckPT0,1.,1.,"B");
-  Mptb->Divide(BckPTM,BckPT0,1.,1.,"B");
-  Tptb->Divide(BckPTT,BckPT0,1.,1.,"B");
-
+  Lptb->Divide(EffPTLb,EffPT0b,1.,1.,"B");
+  Mptb->Divide(EffPTMb,EffPT0b,1.,1.,"B");
+  Tptb->Divide(EffPTTb,EffPT0b,1.,1.,"B");
 
   
 
   Lnvtxs->Divide(EffNVTXL,EffNVTX0,1.,1.,"B");
   Mnvtxs->Divide(EffNVTXM,EffNVTX0,1.,1.,"B");
   Tnvtxs->Divide(EffNVTXT,EffNVTX0,1.,1.,"B");
-
   
-  Lnvtxb->Divide(BckNVTXL,BckNVTX0,1.,1.,"B");
-  Mnvtxb->Divide(BckNVTXM,BckNVTX0,1.,1.,"B");
-  Tnvtxb->Divide(BckNVTXT,BckNVTX0,1.,1.,"B");
+  Lnvtxb->Divide(EffNVTXLb,EffNVTX0b,1.,1.,"B");
+  Mnvtxb->Divide(EffNVTXMb,EffNVTX0b,1.,1.,"B");
+  Tnvtxb->Divide(EffNVTXTb,EffNVTX0b,1.,1.,"B");
+
 
 
   // the branch  out cuts 
-
 
   Sieaft->Divide(EffPTs,EffPT0,1.,1.,"B"); 
   ToEaft->Divide(EffPTt,EffPT0,1.,1.,"B");
   IsoPaft->Divide(EffPTp,EffPT0,1.,1.,"B");
   IsoCaft->Divide(EffPTc,EffPT0,1.,1.,"B");
   IsoNaft->Divide(EffPTn,EffPT0,1.,1.,"B");
-
 
 
 
@@ -174,10 +252,8 @@ void EfPT_higherValues(){
   c1->cd(1);
   Mnvtxs->Draw();
   Mnvtxs->GetYaxis()->SetRangeUser(0,1.0);
- 
   Mnvtxs->GetXaxis()->SetTitle("# Nvtx");
   Mnvtxs->GetXaxis()->SetRangeUser(0,45);
-
   Mnvtxs->SetLineColor(kRed);
   Mnvtxs->SetMarkerColor(kRed);
   Mnvtxs->SetMarkerSize(0.5);
@@ -187,7 +263,6 @@ void EfPT_higherValues(){
   c1->cd(2);
   Mpts->Draw();
   Mpts->GetYaxis()->SetRangeUser(0,1.0);
- 
   Mpts->GetXaxis()->SetTitle("Pt GeVc^{-1}");
   Mpts->SetLineColor(kRed);
   Mpts->SetMarkerColor(kRed);
@@ -198,14 +273,18 @@ void EfPT_higherValues(){
   c1->cd(3);
   Metas->Draw();
   Metas->GetYaxis()->SetRangeUser(0,1.0);
- 
   Metas->GetXaxis()->SetTitle("#eta");
   Metas->SetLineColor(kRed);
   Metas->SetMarkerColor(kRed);
   Metas->SetMarkerSize(0.5);
   Metab->SetMarkerSize(0.5);
   Metab->Draw("same");
+
   c1->SaveAs("MediumEffBck.png");
+  c1->SaveAs("MediumEffBck.C");
+  c1->SaveAs("MediumEffBck.root");
+
+
 
   TCanvas *c2  = new TCanvas("c2","Loose",900,900);
   c2->Divide(2,2);
@@ -215,7 +294,6 @@ void EfPT_higherValues(){
   Lnvtxs->GetXaxis()->SetTitle("# Nvtx");
   Lnvtxs->GetYaxis()->SetRangeUser(0,1.0);
   Lnvtxs->GetXaxis()->SetRangeUser(0,45);
-
   Lnvtxs->SetLineColor(kRed);
   Lnvtxs->SetMarkerColor(kRed);
   Lnvtxs->SetMarkerSize(0.5);
@@ -232,27 +310,20 @@ void EfPT_higherValues(){
   Lptb->SetMarkerSize(0.5);
   Lptb->Draw("esame");
 
-
-
   c2->cd(3);
   Letas->Draw();
   Letas->GetXaxis()->SetTitle("#eta");
   Letas->GetYaxis()->SetRangeUser(0,1.0);
-  
   Letas->SetLineColor(kRed);
   Letas->SetMarkerColor(kRed);
   Letas->SetMarkerSize(0.5);
   Letab->SetMarkerSize(0.5);
-
   Letab->Draw("esame");
   
 
-
   c2->SaveAs("LooseEffBck.png");
-
-
-
-
+  c2->SaveAs("LooseEffBck.C");
+  c2->SaveAs("LooseEffBck.root");
 
 
 
@@ -263,54 +334,47 @@ void EfPT_higherValues(){
   c3->cd(1);
   Tnvtxs->Draw();
   Tnvtxs->GetYaxis()->SetRangeUser(0,1.0);
- 
   Tnvtxs->GetXaxis()->SetTitle("# Nvtx");
   Tnvtxs->SetLineColor(kRed);
   Tnvtxs->SetMarkerColor(kRed);
   Tnvtxs->SetMarkerSize(0.5);
   Tnvtxb->SetMarkerSize(0.5);
-
   Tnvtxs->GetXaxis()->SetRangeUser(0,45);
-
-
   Tnvtxb->Draw("esame");
   
   c3->cd(2);
   Tpts->Draw();
   Tpts->GetYaxis()->SetRangeUser(0,1.0);
- 
- Tpts->GetXaxis()->SetTitle("Pt GeVc^{-1}");
+  Tpts->GetXaxis()->SetTitle("Pt GeVc^{-1}");
   Tpts->SetLineColor(kRed);
   Tpts->SetMarkerColor(kRed);
   Tpts->SetMarkerSize(0.5);
   Tptb->SetMarkerSize(0.5);
   Tptb->Draw("esame");
 
-
-
   c3->cd(3);
   Tetas->Draw();
   Tetas->GetYaxis()->SetRangeUser(0,1.0);
- 
   Tetas->GetXaxis()->SetTitle("#eta");
   Tetas->SetLineColor(kRed);
   Tetas->SetMarkerColor(kRed);
   Tetas->SetMarkerSize(0.5);
   Tetab->SetMarkerSize(0.5);
-
   Tetab->Draw("same");
-  c3->SaveAs("TightEffBck.png");
 
+
+  c3->SaveAs("TightEffBck.png");
+  c3->SaveAs("TightEffBck.C");
+  c3->SaveAs("TightEffBck.root");
  
+
 
 
   TCanvas *c6 = new TCanvas("c6","Pt Spectrum ",900,900);
   c6->Divide(2,2);
+
   c6->cd(2);
-  
-  
   Ptw->Draw();
-  
   Ptw->GetXaxis()->SetTitle("Pt GeVc^{-1}");
   
   c6->cd(1);
@@ -318,11 +382,12 @@ void EfPT_higherValues(){
   Ptweight->GetXaxis()->SetTitle("Pt GeVc^{-1}");
 
   c6->Update();
-
   c6->SaveAs("flattening.png");
+  c6->SaveAs("flattening.C");
+  c3->SaveAs("flattening.root");
 
 
-    l1 = new TLegend(0.4961983,0.6604796,0.6976886,0.8603222);
+  TLegend *l1 = new TLegend(0.4961983,0.6604796,0.6976886,0.8603222);
   l1->SetFillColor(0);
   l1->SetBorderSize(0);
   l1->SetTextSize(0.02);
@@ -343,7 +408,6 @@ void EfPT_higherValues(){
   
   EffPTc1->Draw();
   EffPTc1->GetYaxis()->SetRangeUser(0,1);
-
   EffPTc1->SetLineColor(kRed);
   l1->AddEntry(&EffPTc1," Sieie ","l");
 
@@ -368,14 +432,11 @@ void EfPT_higherValues(){
   l1->AddEntry(&EffPTc5," Iso C","l");
 
 
-
-
-
-
   l1->Draw();
   c7->Update();
   c7->SaveAs("Sequential.png");
-
+  c7->SaveAs("Sequential.C");
+  c7->SaveAs("Sequential.root");
 
 
 
@@ -451,8 +512,6 @@ void EfPT_higherValues(){
 
 
 
-
-
   TProfile *toep = ToEPt->ProfileX(); 
   toep->Draw();
   toep->GetYaxis()->SetTitle("HoE  ");
@@ -518,7 +577,7 @@ void EfPT_higherValues(){
 
 
 
-    TGraph *cutcl = new TGraph(2,xcl,ycl);
+  TGraph *cutcl = new TGraph(2,xcl,ycl);
   TGraph *cutcm = new TGraph(2,xcm,ycm);
   TGraph *cutct = new TGraph(2,xct,yct);
 
@@ -574,12 +633,12 @@ void EfPT_higherValues(){
   cutnt->SetLineColor(kBlack);
 
 
-
-
-
   
   c8->Update();
   c8->SaveAs("PtvsVars.png");
+  c8->SaveAs("PtvsVars.C");
+  c8->SaveAs("PtvsVars.root");
+
 
 
 
@@ -587,7 +646,6 @@ void EfPT_higherValues(){
   c10->Divide(3,2);
   
   c10->cd(1);  
-
   Sieaft->Draw();
   Sieaft->SetMarkerSize(0.5);
   Sieaft->GetYaxis()->SetTitle("Only Sieie Cut Efficiency");
@@ -619,6 +677,8 @@ void EfPT_higherValues(){
   IsoNaft->GetXaxis()->SetTitle("Pt GeVc^{-1}");
   
   c10->SaveAs("BranchOutCuts.png");
+  c10->SaveAs("BranchOutCuts.C");
+  c10->SaveAs("BranchOutCuts.root");
 
 
 }
