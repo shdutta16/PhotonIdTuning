@@ -7,7 +7,7 @@ cd CMSSW_7_3_5/src
 
 cmsenv
 
-git clone https://github.com/ashimroy/PhotonIdTuning
+git clone https://github.com/shdutta16/PhotonIdTuning
 
 
 
